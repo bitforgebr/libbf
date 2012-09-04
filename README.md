@@ -1,0 +1,4 @@
+libbf
+=====
+
+Severall C++ utilities
