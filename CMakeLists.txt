@@ -15,13 +15,13 @@ else()
 	message(FATAL_ERROR "Need a C++ 11 compiler!")
 endif()
 
-add_library(bf bf.cpp)
+add_library(bf bf.cpp log.cpp)
 
 
 ############### Intallation and Packaging #####################################
 
 install(TARGETS bf DESTINATION lib)
-install(FILES bf.h rawstring.h DESTINATION include/bf)
+install(FILES bf.h rawstring.h log.h DESTINATION include/bf)
 
 set(CPACK_GENERATOR "RPM;TGZ;STGZ;TBZ2")
 
