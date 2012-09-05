@@ -18,17 +18,17 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 #ifndef NDEBUG
-#define log_do(STR, LEVEL) do { if (LEVEL > ::opm::Log::ReportingLevel) ; else ::opm::Log().Get(LEVEL) << basename(const_cast<char*>(__FILE__)) << ':' << __LINE__ << ": " << STR; } while(false)
+#define log_do(STR, LEVEL) do { if (LEVEL > ::bitforge::Log::ReportingLevel) ; else ::bitforge::Log().Get(LEVEL) << basename(const_cast<char*>(__FILE__)) << ':' << __LINE__ << ": " << STR; } while(false)
 #else
-#define log_do(STR, LEVEL) do { if (LEVEL > ::opm::Log::ReportingLevel) ; else ::opm::Log().Get(LEVEL) << STR; } while(false)
+#define log_do(STR, LEVEL) do { if (LEVEL > ::bitforge::Log::ReportingLevel) ; else ::bitforge::Log().Get(LEVEL) << STR; } while(false)
 #endif
 
-#define log_info(STR) do { log_do(STR, ::opm::Log::logINFO); } while(false)
-#define log_warning(STR) do { log_do(STR, ::opm::Log::logINFO); } while(false)
-#define log_error(STR) do { log_do(STR, ::opm::Log::logINFO); } while(false)
+#define log_info(STR) do { log_do(STR, ::bitforge::Log::logINFO); } while(false)
+#define log_warning(STR) do { log_do(STR, ::bitforge::Log::logINFO); } while(false)
+#define log_error(STR) do { log_do(STR, ::bitforge::Log::logINFO); } while(false)
 
 #ifndef NDEBUG
-#define log_debug(STR) do { log_do(STR, ::opm::Log::logDEBUG); } while(false)
+#define log_debug(STR) do { log_do(STR, ::bitforge::Log::logDEBUG); } while(false)
 #else
 #define log_debug(STR) do { } while(false)
 #endif
