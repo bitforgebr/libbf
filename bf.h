@@ -16,14 +16,12 @@
 #include <iostream>
 #include <ctime>
 #include <math.h>
+#include <unistd.h>
 
 #include "rawstring.h"
 
 namespace bitforge
 {
-
-extern const char* PROGRAM_NAME;
-extern bool terminateApp;
 
 class ExceptionWithMessage: public std::exception
 {
@@ -177,8 +175,10 @@ inline char* inttostr(char *buffer, const int bufferSize, int val)
 {
 	const bool neg = val < 0;
 	char* result =  const_cast<char*>( uinttostr( buffer, bufferSize, val ) );
+
 	if ( neg )
 		*--result = '-';
+
 	return result;
 }
 
@@ -230,19 +230,20 @@ inline char* int64tostr(char *buffer, const int bufferSize, int64_t val)
 {
 	const bool neg = val < 0;
 	char* result =  const_cast<char*>( uint64tostr( buffer, bufferSize, val ) );
+
 	if ( neg )
 		*--result = '-';
+
 	return result;
 }
 
 constexpr unsigned int strKey(const char* str)
 {
-	return
-	((!str) || (!str[0])) ? 0 :
-	(!str[1]) ? (str[0] << 24) :
-	(!str[2]) ? (str[0] << 24) + (str[1] << 16) :
-	(!str[3]) ? (str[0] << 24) + (str[1] << 16) + (str[2] << 8) :
-	(str[0] << 24) + (str[1] << 16) + (str[2] << 8) + (str[3]);
+	return ((!str) || (!str[0])) ? 0 :
+						(!str[1]) ? (str[0] << 24) :
+						(!str[2]) ? (str[0] << 24) + (str[1] << 16) :
+						(!str[3]) ? (str[0] << 24) + (str[1] << 16) + (str[2] << 8) :
+									(str[0] << 24) + (str[1] << 16) + (str[2] << 8) + (str[3]);
 }
 
 inline unsigned int strKey(const std::string& str)
@@ -252,12 +253,11 @@ inline unsigned int strKey(const std::string& str)
 
 constexpr unsigned int striKey(const char* str)
 {
-	return
-	((!str) || (!str[0])) ? 0 :
-	(!str[1]) ? ((str[0] | 0x20) << 24) :
-	(!str[2]) ? ((str[0] | 0x20) << 24) + ((str[1] | 0x20) << 16) :
-	(!str[3]) ? ((str[0] | 0x20) << 24) + ((str[1] | 0x20) << 16) + ((str[2] | 0x20) << 8) :
-	((str[0] | 0x20) << 24) + ((str[1] | 0x20) << 16) + ((str[2] | 0x20) << 8) + (str[3] | 0x20);
+	return ((!str) || (!str[0])) ? 0 :
+						(!str[1]) ? ((str[0] | 0x20) << 24) :
+						(!str[2]) ? ((str[0] | 0x20) << 24) + ((str[1] | 0x20) << 16) :
+						(!str[3]) ? ((str[0] | 0x20) << 24) + ((str[1] | 0x20) << 16) + ((str[2] | 0x20) << 8) :
+									((str[0] | 0x20) << 24) + ((str[1] | 0x20) << 16) + ((str[2] | 0x20) << 8) + (str[3] | 0x20);
 }
 
 inline unsigned int striKey(const std::string& str)
@@ -267,6 +267,29 @@ inline unsigned int striKey(const std::string& str)
 
 // Get the number of cores reported by the OS.
 int getNumCores();
+
+
+struct ProcStreams
+{
+	int stdIn = 0;
+	int stdOut = 0;
+	int stdErr = 0;
+
+	~ProcStreams()
+	{
+		close(stdIn);
+		close(stdOut);
+		close(stdErr);
+	}
+};
+/**
+ *	Start a process, but connect the process' stdin, stdout and strerr to pipes which are then
+ *  returned to the caller in the @streams param.
+ *  @param streams out structre to recieve the pipes for the process's streams.
+ *  @param args process name and arguments.  args[0] should be the exec name (i.e. /bin/ls)
+ *  @param env enviroment for the new process.  The default is a copy of the current process' enviroment.
+ */
+bool runAttachedProcess(ProcStreams *streams, const char* const args[], const char* const env[] = environ);
 
 }
 
