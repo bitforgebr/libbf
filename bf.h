@@ -282,6 +282,7 @@ struct ProcStreams
 		close(stdErr);
 	}
 };
+
 /**
  *	Start a process, but connect the process' stdin, stdout and strerr to pipes which are then
  *  returned to the caller in the @streams param.
@@ -290,6 +291,9 @@ struct ProcStreams
  *  @param env enviroment for the new process.  The default is a copy of the current process' enviroment.
  */
 bool runAttachedProcess(ProcStreams *streams, const char* const args[], const char* const env[] = environ);
+
+/* Fast hash function */
+uint32_t fletcher32( uint16_t *data, ::std::size_t len );
 
 }
 
