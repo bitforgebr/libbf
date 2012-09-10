@@ -14,30 +14,58 @@ int getNumCores()
 {
 	int ret = 0;
 
-	boost::regex processor("(?<=processor\\s:\\s).*");
-	std::ifstream cpuinfo("/proc/cpuinfo");
-	while(cpuinfo.good())
+	ProcStreams getconf;
+	const char* const args[] = {"getconf", "_NPROCESSORS_ONLN"};
+	if (runAttachedProcess(&getconf, args))
 	{
-		char buffer[1024];
-		cpuinfo.getline(buffer, sizeof(buffer));
+		struct timeval timeOut = {0, 500};
+		int maxFD = std::max(getconf.stdOut, getconf.stdErr);
+		fd_set fd;
+		FD_SET(getconf.stdOut, &fd);
+		FD_SET(getconf.stdErr, &fd);
 
-		try
+		int rc = select(maxFD + 1, &fd, nullptr, nullptr, &timeOut);
+		if(rc > 0 && FD_ISSET(getconf.stdOut, &fd))
 		{
-			std::string str = buffer;
-			auto it = str.begin(), end = str.end();
-			boost::match_results<std::string::iterator> what;
-
-			if (boost::regex_search(it, end, what, processor, boost::regex_constants::match_default | boost::regex_constants::match_stop))
+			std::size_t buffSize = 256;
+			char buff[buffSize];
+			auto r = read(getconf.stdOut, buff, buffSize);
+			if (r > 0)
 			{
-				for(int i = 0, size = what.size(); i != size; i++)
-					if (what[i].matched)
-					{
-						ret = std::max(atoi(std::string(what[i].first, what[i].second).c_str()) + 1, ret);
-					}
+				buff[r] = 0;
+				ret = atoi(buff);
 			}
 		}
-		catch(...)
+	}
+
+	if (ret == 0)
+	{
+		// possible alternative:  "^processor.: [0-9]+$"
+		boost::regex processor("(?<=processor\\s:\\s).*");
+		std::ifstream cpuinfo("/proc/cpuinfo");
+		while(cpuinfo.good())
 		{
+			char buffer[1024];
+			cpuinfo.getline(buffer, sizeof(buffer));
+
+			try
+			{
+				std::string str = buffer;
+				auto it = str.begin(), end = str.end();
+				boost::match_results<std::string::iterator> what;
+
+				if (boost::regex_search(it, end, what, processor, boost::regex_constants::match_default | boost::regex_constants::match_stop))
+				{
+					for(int i = 0, size = what.size(); i != size; i++)
+						if (what[i].matched)
+						{
+							ret = std::max(atoi(std::string(what[i].first, what[i].second).c_str()) + 1, ret);
+						}
+				}
+			}
+			catch(...)
+			{
+			}
 		}
 	}
 
