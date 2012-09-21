@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 2.8)
 
 ############### Copmpilation #####################################
 
-add_definitions(-Wall -Wextra)
+add_definitions(-Wall -Wextra -fPIC)
 
 find_package(CheckForCPP11 HINTS $ENV{MISC_CMAKE_MODULES})
 
