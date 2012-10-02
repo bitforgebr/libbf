@@ -295,7 +295,7 @@ inline std::string intohex(unsigned char v)
 
 	do
 	{
-		const unsigned int digit = (v % 16);
+		const unsigned char digit = (v % 16);
 
 		if(digit <= 9)
 			*--c = '0' + digit;
