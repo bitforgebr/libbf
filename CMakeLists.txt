@@ -38,5 +38,4 @@ set(CPACK_RPM_PACKAGE_LICENSE			"orange-iptv-license")
 set(CPACK_RPM_PACKAGE_GROUP				"orange")
 set(CPACK_RPM_PACKAGE_REQUIRES			"libcurl, openssl, protobuf")
 
-
 include(CPack)

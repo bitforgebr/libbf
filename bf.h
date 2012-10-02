@@ -40,6 +40,20 @@ public:
 	};
 };
 
+class ErrnoException
+{
+private:
+	int			m_errno = -1;
+	std::string	m_errmsg;
+
+public:
+	ErrnoException(int error_no);
+	ErrnoException(std::string err_msg, int error_no);
+
+	int error_number() const {return m_errno;}
+	const std::string& error_message() const {return m_errmsg;}
+};
+
 enum DateFormat
 {
 	dfSQL,
@@ -245,6 +259,52 @@ inline char* int64tostr(char* buffer, const int bufferSize, int64_t val)
 
 	if(neg)
 		*--result = '-';
+
+	return result;
+}
+
+//TODO Fixme
+inline unsigned char hextoint(const char* v)
+{
+	assert(strlen(v) >= 2);
+
+	unsigned char res;
+
+	if (v[0] >= '0' && v[0] <= '9')
+		res = (v[0] - '0') << 4;
+	else if (v[0] >= 'a' && v[0] <= 'f')
+		res = ((v[0] - 'f') + 15) << 4;
+	else if (v[0] >= 'A' && v[0] <= 'F')
+		res = ((v[0] - 'F') + 15) << 4;
+
+	if (v[1] >= '0' && v[1] <= '9')
+		res += v[1] - '0';
+	else if (v[1] >= 'a' && v[1] <= 'f')
+		res += (v[1] - 'f') + 15;
+	else if (v[1] >= 'A' && v[1] <= 'F')
+		res += (v[1] - 'F') + 15;
+
+	return res;
+}
+
+//TODO Fixme
+inline std::string intohex(unsigned char v)
+{
+	char result[] = "00";
+	char* c = &result[2];
+
+	do
+	{
+		const unsigned int digit = (v % 16);
+
+		if(digit <= 9)
+			*--c = '0' + digit;
+		else
+			*--c = 'A' + digit - 10;
+
+		v /= 16;
+	}
+	while(v);
 
 	return result;
 }
