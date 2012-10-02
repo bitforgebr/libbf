@@ -20,7 +20,6 @@
 
 #include "rawstring.h"
 
-
 namespace bitforge
 {
 
@@ -266,7 +265,8 @@ inline char* int64tostr(char* buffer, const int bufferSize, int64_t val)
 //TODO Fixme
 inline unsigned char hextoint(const char* v)
 {
-	assert(strlen(v) >= 2);
+	if (strlen(v) < 2)
+		return 0;
 
 	unsigned char res;
 
