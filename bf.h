@@ -42,7 +42,7 @@ public:
 class ErrnoException
 {
 private:
-	int			m_errno = -1;
+	int			m_errno;
 	std::string	m_errmsg;
 
 public:
@@ -91,7 +91,7 @@ inline std::string getDate(DateFormat dateFormat = dfSQL)
 class ProcTimer
 {
 private:
-	struct timespec m_time = {0, 0};
+	struct timespec m_time;
 
 	ProcTimer(struct timespec ts) : m_time(ts) {}
 
@@ -343,10 +343,12 @@ int getNumCores();
 
 struct ProcStreams
 {
-	int stdIn = 0;
-	int stdOut = 0;
-	int stdErr = 0;
+	int stdIn;
+	int stdOut;
+	int stdErr;
 
+	ProcStreams(): stdIn(0), stdOut(1), stdErr(3) {}
+	
 	~ProcStreams()
 	{
 		close(stdIn);

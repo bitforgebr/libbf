@@ -29,10 +29,10 @@ private:
 	static void CharDeleter(char* c) { delete[] c; };
 
 	CharPtr		m_data;
-	std::size_t	m_length = 0;
+	std::size_t	m_length;
 
 public:
-	RawString() {}
+	RawString(): m_length(0) {}
 
 	RawString(const char* str, std::size_t length) : m_length(length)
 	{

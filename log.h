@@ -47,10 +47,7 @@ public:
 		logDEBUG
 	};
 
-	Log() {}
-	Log(const Log&) = delete;
-	Log& operator=(const Log&) = delete;
-	bool operator==(const Log&) const = delete;
+	Log(): m_os(&std::cout), m_messageLevel(ReportingLevel) {}
 
 	~Log()
 	{
@@ -80,8 +77,20 @@ public:
    static LogLevel ReportingLevel;
 
 protected:
-	std::ostream *m_os = &std::cout;
-	LogLevel m_messageLevel = ReportingLevel;
+	std::ostream *m_os;
+	LogLevel m_messageLevel;
+
+#if (__cplusplus >= 201103L)
+public:
+	Log(const Log&) = delete;
+	Log& operator=(const Log&) = delete;
+	bool operator==(const Log&) const = delete;
+#else
+private:
+	Log(const Log&);
+	Log& operator=(const Log&);
+	bool operator==(const Log&);
+#endif
 };
 
 } /* namespace bitforge */
