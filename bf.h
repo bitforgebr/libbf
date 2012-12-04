@@ -23,6 +23,11 @@
 namespace bitforge
 {
 
+inline bool operator==(const char* str1, const std::string str2)
+{
+    return str1 && strcmp( str1, str2.c_str() ) == 0;
+}
+
 class ExceptionWithMessage: public std::exception
 {
 public:
