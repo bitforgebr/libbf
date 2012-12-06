@@ -129,4 +129,17 @@ uint32_t fletcher32( uint16_t *data, ::std::size_t len )
     return sum2 << 16 | sum1;
 }
 
+std::size_t getSystemPageSize()
+{
+    std::size_t bufferSize = 128;
+    char buffer[bufferSize];
+    memset(buffer, 0, bufferSize);
+
+    FILE *proc = popen("getconf PAGESIZE", "r");
+    fread(buffer, bufferSize, 1, proc);
+    fclose(proc);
+
+    return atoi(buffer);
+}
+
 } // bitforge
