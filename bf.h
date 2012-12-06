@@ -23,9 +23,19 @@
 namespace bitforge
 {
 
-inline bool operator==(const char* str1, const std::string str2)
+const char* __get_char_str(::std::string s) { return s.c_str(); }
+const char* __get_char_str(const char *s) { return s; }
+
+template<typename L, typename R>
+bool CompStr(L str1, R str2)
 {
-    return str1 && strcmp( str1, str2.c_str() ) == 0;
+    return strcmp(__get_char_str(str1), __get_char_str(str2)) == 0;
+}
+
+template<typename L, typename R>
+bool ICompStr(L str1, R str2)
+{
+    return strcasecmp(__get_char_str(str1), __get_char_str(str2)) == 0;
 }
 
 class ExceptionWithMessage: public std::exception
