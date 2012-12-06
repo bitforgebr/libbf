@@ -23,8 +23,8 @@
 namespace bitforge
 {
 
-const char* __get_char_str(::std::string s) { return s.c_str(); }
-const char* __get_char_str(const char *s) { return s; }
+inline const char* __get_char_str(::std::string s) { return s.c_str(); }
+inline const char* __get_char_str(const char *s) { return s; }
 
 template<typename L, typename R>
 bool CompStr(L str1, R str2)
