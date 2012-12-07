@@ -23,19 +23,34 @@
 namespace bitforge
 {
 
-inline const char* __get_char_str(::std::string s) { return s.c_str(); }
-inline const char* __get_char_str(const char *s) { return s; }
+template <typename R, typename L>
+class StringsComparer
+{
+private:
+    const char* get_char_str(::std::string s) { return s.c_str(); }
+    const char* get_char_str(const char *s) { return s; }
+public:
+    static bool IsEqual(L str1, R str2)
+    {
+        return strcmp(get_char_str(str1), get_char_str(str2)) == 0;
+    }
+
+    static bool IsEqualICase(L str1, R str2)
+    {
+        return strcasecmp(get_char_str(str1), get_char_str(str2)) == 0;
+    }
+};
 
 template<typename L, typename R>
 bool CompStr(L str1, R str2)
 {
-    return strcmp(__get_char_str(str1), __get_char_str(str2)) == 0;
+    return StringsComparer<R, L>::IsEqual(str1, str2);
 }
 
 template<typename L, typename R>
 bool ICompStr(L str1, R str2)
 {
-    return strcasecmp(__get_char_str(str1), __get_char_str(str2)) == 0;
+    return StringsComparer<R, L>::IsEqualICase(str1, str2);
 }
 
 class ExceptionWithMessage: public std::exception
