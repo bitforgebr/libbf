@@ -27,6 +27,7 @@ template <typename R, typename L>
 class StringsComparer
 {
 private:
+    const char* get_char_str(NCString s) { return s.c_str(); }
     const char* get_char_str(::std::string s) { return s.c_str(); }
     const char* get_char_str(const char *s) { return s; }
 public:
