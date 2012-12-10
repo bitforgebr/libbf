@@ -18,7 +18,7 @@
 #include <math.h>
 #include <unistd.h>
 
-#include "ncstring.h"
+#include <bf/ncstring.h>
 
 namespace bitforge
 {
