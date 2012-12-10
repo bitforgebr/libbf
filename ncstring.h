@@ -187,9 +187,10 @@ public:
         else
         {
             CharRef oldStr = m_memory;
+            const char *oldBegin = m_begin;
             alloc(newLen + 1);
 
-            memcpy(m_begin, oldStr.get(), m_length);
+            memcpy(m_begin, oldBegin, m_length);
             memcpy(m_begin + m_length, str, strLen);
         }
 
@@ -197,7 +198,18 @@ public:
         m_begin[m_length] = 0;
     }
 
+    void append(const std::string& str)
+    {
+        append(str.c_str());
+    }
+
     NCString& operator+=(const char* str)
+    {
+        append(str);
+        return *this;
+    }
+
+    NCString& operator+(const char* str)
     {
         append(str);
         return *this;
@@ -282,11 +294,12 @@ public:
             else
             {
                 CharRef oldRef = m_memory;
+                const char* oldBegin = m_begin;
 
                 alloc(length + 1);
                 m_length = length;
 
-                memcpy(m_begin, oldRef.get(), length);
+                memcpy(m_begin, oldBegin, length);
 
                 m_begin[m_length] = 0;
             }
