@@ -18,7 +18,7 @@
 #include <math.h>
 #include <unistd.h>
 
-#include "rawstring.h"
+#include "ncstring.h"
 
 namespace bitforge
 {
@@ -60,7 +60,7 @@ public:
     virtual ~ExceptionWithMessage() throw() {};
 
 private:
-    RawString m_what;
+    NCString m_what;
 
 public:
     virtual const char* what() const throw()
