@@ -21,21 +21,21 @@ add_library(bf bf.cpp log.cpp)
 ############### Intallation and Packaging #####################################
 
 install(TARGETS bf DESTINATION lib)
-install(FILES bf.h rawstring.h log.h DESTINATION include/bf)
+install(FILES bf.h ncstring.h log.h DESTINATION include/bf)
 
 set(CPACK_GENERATOR "RPM;TGZ;STGZ;TBZ2")
 
 # Genral CPACK stuff
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY	"OPM Traceroute")
-set(CPACK_PACKAGE_NAME					"opm-traceroute")
-set(CPACK_PACKAGE_VERSION				"0.1")
-set(CPACK_PACKAGE_VENDOR				"orange")
-set(CPACK_PACKAGE_DESCRIPTION_FILE		"${CMAKE_SOURCE_DIR}/README.md")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY   "OPM Traceroute")
+set(CPACK_PACKAGE_NAME                  "opm-traceroute")
+set(CPACK_PACKAGE_VERSION               "0.1")
+set(CPACK_PACKAGE_VENDOR                "orange")
+set(CPACK_PACKAGE_DESCRIPTION_FILE      "${CMAKE_SOURCE_DIR}/README.md")
 
 # CPACK RPM-specific stuff
-set(CPACK_RPM_PACKAGE_RELEASE			1)
-set(CPACK_RPM_PACKAGE_LICENSE			"orange-iptv-license")
-set(CPACK_RPM_PACKAGE_GROUP				"orange")
-set(CPACK_RPM_PACKAGE_REQUIRES			"libcurl, openssl, protobuf")
+set(CPACK_RPM_PACKAGE_RELEASE           1)
+set(CPACK_RPM_PACKAGE_LICENSE           "orange-iptv-license")
+set(CPACK_RPM_PACKAGE_GROUP             "orange")
+set(CPACK_RPM_PACKAGE_REQUIRES          "libcurl, openssl, protobuf")
 
 include(CPack)
