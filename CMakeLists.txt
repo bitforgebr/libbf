@@ -9,14 +9,15 @@ add_definitions(-Wall -Wextra -fPIC)
 find_package(CheckForCPP11 HINTS $ENV{MISC_CMAKE_MODULES})
 
 if ( CPP11 )
-	message(STATUS "Using C++ 11")
-	add_definitions(${CPP11_DEFS})
+    message(STATUS "Using C++ 11")
+    add_definitions(${CPP11_DEFS})
 else()
-	message(FATAL_ERROR "Need a C++ 11 compiler!")
+    message(FATAL_ERROR "Need a C++ 11 compiler!")
 endif()
 
-add_library(bf bf/bf.cpp bf/log.cpp)
+include_directories(.)
 
+add_library(bf bf/bf.cpp bf/log.cpp)
 
 ############### Intallation and Packaging #####################################
 
