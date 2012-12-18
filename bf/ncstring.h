@@ -24,29 +24,11 @@ namespace bitforge
  * @description Thread-safe string that breaks std::string COW's problems
  */
 
-class NCString
+template<typename T>
+class BasicNCString
 {
 private:
-    class MemoryObject
-    {
-    private:
-        char* m_memory;
-
-    public:
-        MemoryObject(const std::size_t size)
-        {
-            m_memory = new char[size];
-        }
-
-        ~MemoryObject()
-        {
-            delete[] m_memory;
-        }
-
-        char* get() { return m_memory; }
-    };
-
-    typedef std::shared_ptr<MemoryObject> CharRef;
+    typedef std::shared_ptr<T> CharRef;
 
     CharRef         m_memory;
     char*           m_begin = nullptr;
@@ -56,23 +38,23 @@ private:
     void alloc(std::size_t size)
     {
         m_maxSize = size;
-        m_memory = std::make_shared<MemoryObject>(size);
+        m_memory = std::make_shared<T>(size);
         m_begin = m_memory->get();
     }
 
 public:
     static const std::size_t npos = std::string::npos;
 
-    NCString() {}
+    BasicNCString() {}
 
-    NCString(const NCString& other)
+    BasicNCString(const BasicNCString& other)
     {
         m_length = other.m_length;
         m_memory = other.m_memory;
         m_begin = m_memory ? m_memory->get() : nullptr;
     }
 
-    NCString& operator=(const NCString& other)
+    BasicNCString& operator=(const BasicNCString& other)
     {
         m_length = other.m_length;
         m_memory = other.m_memory;
@@ -81,14 +63,14 @@ public:
         return *this;
     }
 
-    NCString(NCString&& other)
+    BasicNCString(BasicNCString&& other)
     {
         std::swap(m_memory, other.m_memory);
         std::swap(m_begin, other.m_begin);
         std::swap(m_length, other.m_length);
     }
 
-    NCString& operator=(NCString&& other)
+    BasicNCString& operator=(BasicNCString&& other)
     {
         std::swap(m_memory, other.m_memory);
         std::swap(m_begin, other.m_begin);
@@ -96,7 +78,7 @@ public:
         return *this;
     }
 
-    NCString(const std::string &str)
+    BasicNCString(const std::string &str)
     {
         m_length = str.length();
         alloc(m_length + 1);
@@ -104,7 +86,7 @@ public:
         m_begin[m_length] = 0;
     }
 
-    NCString& operator=(const std::string &str)
+    BasicNCString& operator=(const std::string &str)
     {
         m_length = str.length();
         alloc(m_length + 1);
@@ -121,7 +103,7 @@ public:
         return std::string();
     }
 
-    NCString(const char* str)
+    BasicNCString(const char* str)
     {
         m_length = strlen(str);
         alloc(m_length + 1);
@@ -129,7 +111,7 @@ public:
         m_begin[m_length] = 0;
     }
 
-    NCString& operator=(const char* str)
+    BasicNCString& operator=(const char* str)
     {
         m_length = strlen(str);
         alloc(m_length + 1);
@@ -139,7 +121,7 @@ public:
         return *this;
     }
 
-    NCString(const char* str, std::size_t length) :
+    BasicNCString(const char* str, std::size_t length) :
         m_length(length)
     {
         alloc(m_length + 1);
@@ -147,7 +129,7 @@ public:
         m_begin[m_length] = 0;
     }
 
-    bool operator<(const NCString& other) const
+    bool operator<(const BasicNCString& other) const
     {
         const char* t = data();
         const char* o = other.data();
@@ -164,7 +146,7 @@ public:
         return std::strncmp(begin(), str, m_length) == 0;
     }
 
-    bool operator==(const NCString other) const
+    bool operator==(const BasicNCString& other) const
     {
         return std::strncmp(begin(), other.begin(), m_length) == 0;
     }
@@ -172,6 +154,11 @@ public:
     bool operator!=(const char* str) const
     {
         return std::strncmp(m_begin, str, m_length) != 0;
+    }
+
+    bool operator!=(const BasicNCString& other) const
+    {
+        return std::strncmp(begin(), other.begin(), m_length) != 0;
     }
 
     void append(const char* str)
@@ -203,13 +190,13 @@ public:
         append(str.c_str());
     }
 
-    NCString& operator+=(const char* str)
+    BasicNCString& operator+=(const char* str)
     {
         append(str);
         return *this;
     }
 
-    NCString& operator+(const char* str)
+    BasicNCString& operator+(const char* str)
     {
         append(str);
         return *this;
@@ -270,16 +257,16 @@ public:
         return std::string::npos;
     }
 
-    NCString substr(std::size_t start) const
+    BasicNCString substr(std::size_t start) const
     {
         std::size_t l = m_length - start;
-        return NCString(m_begin + start, l);
+        return BasicNCString(m_begin + start, l);
     }
 
-    NCString substr(std::size_t start, std::size_t length) const
+    BasicNCString substr(std::size_t start, std::size_t length) const
     {
         std::size_t l = std::min(length, m_length - start);
-        return NCString(m_begin + start, l);
+        return BasicNCString(m_begin + start, l);
     }
 
     void chop(std::size_t length)
@@ -307,13 +294,35 @@ public:
     }
 };
 
-inline std::ostream& operator<<(std::ostream& stream, const NCString& string)
+template<typename T>
+std::ostream& operator<<(std::ostream& stream, const BasicNCString<T>& string)
 {
     if (string.length())
         stream.write(string.data(), string.length());
 
     return stream;
 }
+
+class BasicMemoryObject
+{
+private:
+    char* m_memory;
+
+public:
+    BasicMemoryObject(const std::size_t size)
+    {
+        m_memory = new char[size];
+    }
+
+    ~BasicMemoryObject()
+    {
+        delete[] m_memory;
+    }
+
+    char* get() { return m_memory; }
+};
+
+typedef BasicNCString<BasicMemoryObject> NCString;
 
 } // bitforge
 
