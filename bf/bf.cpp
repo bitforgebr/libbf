@@ -5,6 +5,7 @@
 #include <cerrno>
 #include <cstring>
 #include <cstdio>
+#include <cassert>
 
 namespace bitforge
 {
@@ -56,9 +57,9 @@ bool runAttachedProcess(ProcStreams *streams, const char* const args[], const ch
 {
     int pipeIn[2], pipeOut[2], pipeErr[2]; /* pipe */
 
-    pipe(pipeIn);
-    pipe(pipeOut);
-    pipe(pipeErr);
+    assert(pipe(pipeIn) == 0);
+    assert(pipe(pipeOut) == 0);
+    assert(pipe(pipeErr) == 0);;
 
     switch(fork())
     {
