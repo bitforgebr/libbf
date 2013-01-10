@@ -113,12 +113,21 @@ public:
 
     BasicNCString& operator=(const char* str)
     {
-        m_length = strlen(str);
+        assign(str);
+        return *this;
+    }
+
+    void assign(const char* str)
+    {
+        assign(str, strlen(str));
+    }
+
+    void assign(const char* str, std::size_t len)
+    {
+        m_length = len;
         alloc(m_length + 1);
         memcpy(m_begin, str, m_length);
         m_begin[m_length] = 0;
-
-        return *this;
     }
 
     BasicNCString(const char* str, std::size_t length) :
@@ -141,19 +150,9 @@ public:
             return std::strcmp(t, o) < 0;
     }
 
-    bool operator==(const char* str) const
-    {
-        return std::strncmp(begin(), str, m_length) == 0;
-    }
-
     bool operator==(const BasicNCString& other) const
     {
         return std::strncmp(begin(), other.begin(), m_length) == 0;
-    }
-
-    bool operator!=(const char* str) const
-    {
-        return std::strncmp(m_begin, str, m_length) != 0;
     }
 
     bool operator!=(const BasicNCString& other) const
@@ -242,6 +241,11 @@ public:
     int compare(const char* other) const
     {
         return std::strcmp(m_begin, other);
+    }
+
+    int compare(const BasicNCString& other) const
+    {
+        return std::strcmp(m_begin, other.m_begin);
     }
 
     std::size_t find(char v) const
