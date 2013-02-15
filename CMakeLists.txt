@@ -22,7 +22,7 @@ add_library(bf bf/bf.cpp bf/log.cpp)
 ############### Intallation and Packaging #####################################
 
 install(TARGETS bf DESTINATION lib)
-install(FILES bf/bf.h bf/ncstring.h bf/log.h DESTINATION include/bf)
+install(FILES bf/bf.h bf/ncstring.h bf/log.h bf/circularbuffer.h DESTINATION include/bf)
 
 set(CPACK_GENERATOR "RPM;TGZ;STGZ;TBZ2")
 
