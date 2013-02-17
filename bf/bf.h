@@ -23,6 +23,76 @@
 namespace bitforge
 {
 
+template<typename T>
+class StrongTypedef
+{
+private:
+    T   m_value;
+    
+public:
+    StrongTypedef(): m_value(T()) {}
+    
+    static StrongTypedef<T> make(const T& v)
+    {
+        StrongTypedef<T> result;
+        result.m_value = v;
+        return result;
+    }
+    
+    static StrongTypedef<T> make(T &&v)
+    {
+        StrongTypedef<T> result;
+        result.m_value = v;
+        return result;
+    }
+    
+    StrongTypedef(T) = delete;
+    StrongTypedef<T>& operator=(const T&) = delete;
+    
+    T get() const { return m_value; }
+    void set(T v)  { m_value = v; }
+    
+    bool operator==(const StrongTypedef<T>& other) { return m_value == other.m_value; }
+    bool operator!=(const StrongTypedef<T>& other) { return m_value != other.m_value; }
+    bool operator>(const StrongTypedef<T>& other)  { return m_value >  other.m_value; }
+    bool operator<(const StrongTypedef<T>& other)  { return m_value <  other.m_value; }
+};
+
+template<typename T>
+class SingletonStrongTypedef
+{
+private:
+    T   m_value;
+    
+public:
+    SingletonStrongTypedef(): m_value(T()) {}
+    
+    static SingletonStrongTypedef<T> make(const T& v)
+    {
+        SingletonStrongTypedef<T> result;
+        result.m_value = v;
+        return result;
+    }
+    
+    static SingletonStrongTypedef<T> make(T &&v)
+    {
+        SingletonStrongTypedef<T> result;
+        result.m_value = v;
+        return result;
+    }
+    
+    SingletonStrongTypedef(T) = delete;
+    SingletonStrongTypedef<T>& operator=(const T&) = delete;
+    
+    T get() const { return m_value; }
+    void set(T v)  { m_value = v; }
+    
+    bool operator==(const SingletonStrongTypedef<T>& other) { return m_value == other.m_value; }
+    bool operator!=(const SingletonStrongTypedef<T>& other) { return m_value != other.m_value; }
+    bool operator>(const SingletonStrongTypedef<T>& other)  { return m_value >  other.m_value; }
+    bool operator<(const SingletonStrongTypedef<T>& other)  { return m_value <  other.m_value; }
+};
+    
 template <typename R, typename L>
 class StringsComparer
 {
