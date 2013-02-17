@@ -82,7 +82,6 @@ public:
     }
     
     SingletonStrongTypedef(T) = delete;
-    SingletonStrongTypedef(const T&) = delete;
     SingletonStrongTypedef<T>& operator=(const T&) = delete;
     
     T get() const { return m_value; }
