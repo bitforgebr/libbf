@@ -52,10 +52,10 @@ public:
     T get() const { return m_value; }
     void set(T v)  { m_value = v; }
     
-    bool operator==(const StrongTypedef<T>& other) { return m_value == other.m_value; }
-    bool operator!=(const StrongTypedef<T>& other) { return m_value != other.m_value; }
-    bool operator>(const StrongTypedef<T>& other)  { return m_value >  other.m_value; }
-    bool operator<(const StrongTypedef<T>& other)  { return m_value <  other.m_value; }
+    bool operator==(const StrongTypedef<T>& other) const { return m_value == other.m_value; }
+    bool operator!=(const StrongTypedef<T>& other) const { return m_value != other.m_value; }
+    bool operator>(const StrongTypedef<T>& other) const { return m_value >  other.m_value; }
+    bool operator<(const StrongTypedef<T>& other) const { return m_value <  other.m_value; }
 };
 
 template<typename T>
@@ -66,13 +66,6 @@ private:
     
 public:
     SingletonStrongTypedef(): m_value(T()) {}
-    
-    static SingletonStrongTypedef<T> make(const T& v)
-    {
-        SingletonStrongTypedef<T> result;
-        result.m_value = v;
-        return result;
-    }
     
     static SingletonStrongTypedef<T> make(T &&v)
     {
@@ -87,10 +80,10 @@ public:
     T get() const { return m_value; }
     void set(T v)  { m_value = v; }
     
-    bool operator==(const SingletonStrongTypedef<T>& other) { return m_value == other.m_value; }
-    bool operator!=(const SingletonStrongTypedef<T>& other) { return m_value != other.m_value; }
-    bool operator>(const SingletonStrongTypedef<T>& other)  { return m_value >  other.m_value; }
-    bool operator<(const SingletonStrongTypedef<T>& other)  { return m_value <  other.m_value; }
+    bool operator==(const SingletonStrongTypedef<T>& other) const { return m_value == other.m_value; }
+    bool operator!=(const SingletonStrongTypedef<T>& other) const { return m_value != other.m_value; }
+    bool operator>(const SingletonStrongTypedef<T>& other) const { return m_value >  other.m_value; }
+    bool operator<(const SingletonStrongTypedef<T>& other) const { return m_value <  other.m_value; }
 };
     
 template <typename R, typename L>
