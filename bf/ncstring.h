@@ -159,6 +159,22 @@ public:
     {
         return std::strncmp(begin(), other.begin(), m_length) != 0;
     }
+    
+    char& operator[](std::size_t pos)
+    {
+        if (pos < m_length)
+            return m_begin[pos];
+        else
+            return m_begin[m_length];
+    }
+    
+    const char& operator[](std::size_t pos) const
+    {
+        if (pos < m_length)
+            return m_begin[pos];
+        else
+            return m_begin[m_length];
+    }
 
     void append(const char* str)
     {
