@@ -206,11 +206,11 @@ private:
     
 protected:
     friend class MemoryPage;
-    void returnPage(MemoryPage *page);
+    inline void returnPage(MemoryPage *page);
     
 public:
     typedef std::unique_ptr<MemoryPool::MemoryPage> MemoryPagePtr;
-    MemoryPagePtr getPage();
+    inline MemoryPagePtr getPage();
     size_type  pageSize() const { return m_pageSize; }
 };
 typedef std::shared_ptr<MemoryPool> MemoryPoolPtr;
