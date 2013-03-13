@@ -57,6 +57,10 @@ bool runAttachedProcess(ProcStreams *streams, const char* const args[], const ch
 {
     int pipeIn[2], pipeOut[2], pipeErr[2]; /* pipe */
 
+    zero_init(pipeIn);
+    zero_init(pipeOut);
+    zero_init(pipeErr);
+
     assert(pipe(pipeIn) == 0);
     assert(pipe(pipeOut) == 0);
     assert(pipe(pipeErr) == 0);;
@@ -137,10 +141,13 @@ std::size_t getSystemPageSize()
     memset(buffer, 0, bufferSize);
 
     FILE *proc = popen("getconf PAGESIZE", "r");
-    fread(buffer, bufferSize, 1, proc);
+    auto read = fread(buffer, bufferSize, 1, proc);
     fclose(proc);
 
-    return atoi(buffer);
+    if (read)
+        return atoi(buffer);
+    else
+        return 0;
 }
 
 } // bitforge
