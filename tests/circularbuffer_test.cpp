@@ -15,7 +15,7 @@ using namespace bitforge;
 
 std::string getBiggestBinInDir()
 {
-    auto p = popen("ls -1s /usr/bin/* /bin/* | sort -nr | head -n 1 | awk '{print $2}'", "r");
+    auto p = popen("ls -1s /usr/bin/* /bin/* | sort -nr | awk 'NR == 2 {exit}; {print $2}'", "r");
     
     usleep(100);
     
