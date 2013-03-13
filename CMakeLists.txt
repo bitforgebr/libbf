@@ -19,10 +19,31 @@ include_directories(.)
 
 add_library(bf bf/bf.cpp bf/log.cpp)
 
+############### Unit tests ####################################################
+
+set(build_tests false CACHE BOOL "Set to TRUE to build unit tests")
+
+if(build_tests)
+    find_package(GTest REQUIRED)
+    find_library(LIBGTEST NAMES gtest)
+    find_library(LIBGTEST_MAIN NAMES gtest_main)
+        
+    enable_testing()
+    
+    add_executable(runUnitTests tests/int_hex_tests.cpp)
+    
+    target_link_libraries(runUnitTests ${LIBGTEST_MAIN} ${LIBGTEST})
+    
+    add_test(
+        NAME runUnitTests
+        COMMAND runUnitTests
+    )
+endif()
+
 ############### Intallation and Packaging #####################################
 
 install(TARGETS bf DESTINATION lib)
-install(FILES bf/bf.h bf/ncstring.h bf/log.h bf/buffers.h DESTINATION include/bf)
+install(FILES bf/bf.h bf/ncstring.h bf/log.h bf/buffers.h bf/inthex.h DESTINATION include/bf)
 
 set(CPACK_GENERATOR "RPM;TGZ;STGZ;TBZ2")
 
