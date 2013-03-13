@@ -11,12 +11,11 @@
 #ifndef __INCLUDE_LIBBF_BUFFERS_H_
 #define __INCLUDE_LIBBF_BUFFERS_H_
 
-#include <cassert>
-#include <cstdint>
-#include <cstring>
+#include <memory>
 #include <stack>
+#include <vector>
 
-#include <algorithm>
+#include <bf/bf.h>
 
 namespace bitforge {
     

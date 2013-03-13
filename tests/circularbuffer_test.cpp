@@ -1,3 +1,6 @@
+#include <gtest/gtest.h>
+
+#include "../bf/buffers.h"
 
 #include <stdlib.h>
 #include <time.h>
@@ -5,12 +8,33 @@
 #include <iostream>
 #include <fstream>
 
-#include "circularbuffer.h"
+#include <cstdio>
 
 using namespace std;
 using namespace bitforge;
 
-int main()
+std::string getBiggestBinInDir()
+{
+    auto p = popen("ls -1s /usr/bin/* /bin/* | sort -nr | head -n 1 | awk '{print $2}'", "r");
+    
+    usleep(100);
+    
+    char buffer[8192];
+    
+    int read = fread(buffer, 1, sizeof(buffer), p);
+    
+    if (buffer[read - 1] == '\n')
+        read--;
+    
+    buffer[read] = 0;
+    
+    
+    pclose(p);
+    
+    return buffer;
+}
+
+TEST(Buffers, CircularBuffers)
 {
     srandom(clock());
 
@@ -20,13 +44,13 @@ int main()
 
     CircularBuffer<char> s_buffer(bufferSize);
 
-    ifstream in("/tmp/testdata.tar");
-    ofstream out("/tmp/out_testdata.tar", ios_base::trunc);
-
-    char buffer[81920];
+    ifstream in(getBiggestBinInDir());
+    fstream out("/tmp/out_testdata", ios_base::trunc);
 
     while(in.good())
     {
+        char buffer[81920];
+        
         size_t sz = (random() / (RAND_MAX / 800)) + 128;
 
         if (random() % 2)
@@ -63,6 +87,23 @@ int main()
         size_t write = s_buffer.pop(buffer, sz);
         out.write(buffer, write);
     }
-
-    return 0;
+    
+    in.seekg(0);
+    out.seekg(0);
+    
+    while(in.good() && out.good())
+    {
+        static const int bufferSize = 81920;
+        char bufferIn[bufferSize], bufferOut[bufferSize];
+        
+        zero_init(bufferIn);
+        zero_init(bufferOut);
+        
+        in.read(bufferIn, bufferSize - 1);
+        out.read(bufferOut, bufferSize - 1);
+        
+        ASSERT_STREQ(bufferIn, bufferOut);
+    }
+    
+    ASSERT_EQ(in.good(), out.good());
 }
