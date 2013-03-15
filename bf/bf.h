@@ -15,7 +15,8 @@
 
 #include <iostream>
 #include <ctime>
-#include <math.h>
+#include <cmath>
+#include <cassert>
 #include <unistd.h>
 
 #include <bf/ncstring.h>
