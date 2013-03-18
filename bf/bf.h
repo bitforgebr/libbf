@@ -333,7 +333,7 @@ bool runAttachedProcess(ProcStreams* streams, const char* const args[], const ch
 std::size_t getSystemPageSize();
 
 /* Fast hash function */
-uint32_t fletcher32(uint16_t* data, ::std::size_t len);
+uint32_t fletcher32(const char* data, ::std::size_t len);
 
 }
 

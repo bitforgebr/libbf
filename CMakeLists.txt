@@ -30,9 +30,9 @@ if(build_tests)
         
     enable_testing()
     
-    add_executable(runUnitTests tests/int_hex_tests.cpp tests/circularbuffer_test.cpp)
+    add_executable(runUnitTests tests/int_hex_tests.cpp tests/circularbuffer_test.cpp tests/utils_tests.cpp)
     
-    target_link_libraries(runUnitTests ${LIBGTEST_MAIN} ${LIBGTEST})
+    target_link_libraries(runUnitTests bf ${LIBGTEST_MAIN} ${LIBGTEST})
     
     add_test(
         NAME runUnitTests
