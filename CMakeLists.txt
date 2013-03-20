@@ -32,7 +32,7 @@ if(build_tests)
     
     add_executable(runUnitTests tests/int_hex_tests.cpp tests/circularbuffer_test.cpp tests/utils_tests.cpp)
     
-    target_link_libraries(runUnitTests bf ${LIBGTEST_MAIN} ${LIBGTEST})
+    target_link_libraries(runUnitTests bf ${LIBGTEST_MAIN} ${LIBGTEST} pthread)
     
     add_test(
         NAME runUnitTests
