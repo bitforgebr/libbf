@@ -27,12 +27,13 @@ if(build_tests)
     find_package(GTest REQUIRED)
     find_library(LIBGTEST NAMES gtest)
     find_library(LIBGTEST_MAIN NAMES gtest_main)
-        
+    find_package(Boost COMPONENTS date_time REQUIRED)
+    
     enable_testing()
     
-    add_executable(runUnitTests tests/int_hex_tests.cpp tests/circularbuffer_test.cpp)
+    add_executable(runUnitTests tests/int_hex_tests.cpp tests/circularbuffer_test.cpp tests/log_test.cpp)
     
-    target_link_libraries(runUnitTests ${LIBGTEST_MAIN} ${LIBGTEST})
+    target_link_libraries(runUnitTests bf ${Boost_LIBRARIES} ${LIBGTEST_MAIN} ${LIBGTEST})
     
     add_test(
         NAME runUnitTests
