@@ -31,10 +31,11 @@ if(build_tests)
     
     enable_testing()
     
-    add_executable(runUnitTests tests/int_hex_tests.cpp tests/circularbuffer_test.cpp tests/log_test.cpp)
+
+    add_executable(runUnitTests tests/int_hex_tests.cpp tests/circularbuffer_test.cpp tests/utils_tests.cpp tests/log_test.cpp)
     
-    target_link_libraries(runUnitTests bf ${Boost_LIBRARIES} ${LIBGTEST_MAIN} ${LIBGTEST})
-    
+    target_link_libraries(runUnitTests bf ${Boost_LIBRARIES} ${LIBGTEST_MAIN} ${LIBGTEST} pthread)
+   
     add_test(
         NAME runUnitTests
         COMMAND runUnitTests

@@ -130,6 +130,33 @@ public:
         
         return size;
     }
+
+    size_t discard(size_t size = 1)
+    {
+        if ( size == 0 )
+            return 0;
+        if ( size > m_availRead )
+            size = m_availRead;
+
+        m_availRead -= size;
+        m_availWrite += size;
+
+        size_t remain = size;
+
+        while(remain)
+        {
+            size_t sz = std::min(static_cast<size_t>(m_bufferEnd - m_posRead), remain);
+
+            m_posRead += sz;
+
+            if (m_posRead == m_bufferEnd)
+                m_posRead = m_buffer;
+
+            remain -= sz;
+        }
+
+        return size;
+    }
     
     size_t peek(T* x, size_t size = 1)
     {

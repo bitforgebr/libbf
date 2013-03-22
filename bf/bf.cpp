@@ -109,9 +109,14 @@ bool runAttachedProcess(ProcStreams *streams, const char* const args[], const ch
 }
 
 /* Fast hash function */
-uint32_t fletcher32( uint16_t *data, ::std::size_t len )
+uint32_t fletcher32(const char *data, std::size_t len)
 {
     uint32_t sum1 = 0xffff, sum2 = 0xffff;
+
+    // If the length is odd, the last char of the string, a \0 will be
+    // used, but this won't matter since its 0.
+    uint16_t *ptr = (uint16_t*)data;
+    len /= 2;
 
     while (len)
     {
@@ -119,7 +124,7 @@ uint32_t fletcher32( uint16_t *data, ::std::size_t len )
         len -= tlen;
         do
         {
-            sum1 += *data++;
+            sum1 += *ptr++;
             sum2 += sum1;
         }
         while (--tlen);
@@ -142,7 +147,7 @@ std::size_t getSystemPageSize()
 
     FILE *proc = popen("getconf PAGESIZE", "r");
     auto read = fread(buffer, bufferSize, 1, proc);
-    fclose(proc);
+    pclose(proc);
 
     if (read)
         return atoi(buffer);
