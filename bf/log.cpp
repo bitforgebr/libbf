@@ -40,7 +40,7 @@ protected:
     {
         if (buffer_.length()) 
         {
-            syslog(Log::ReportingLevel, buffer_.c_str());
+            syslog(Log::ReportingLevel, "%s", buffer_.c_str());
             buffer_.erase();
         }
         return 0;
