@@ -298,6 +298,16 @@ inline unsigned int striKey(const std::string& str)
     return striKey(str.c_str());
 }
 
+constexpr unsigned int operator "" _key(const char* str, std::size_t len)
+{
+    return
+        len == 0 ? 0 :
+        len == 1 ? (str[0] << 24) :
+        len == 2 ? (str[0] << 24) + (str[1] << 16) :
+        len == 3 ? (str[0] << 24) + (str[1] << 16) + (str[2] << 8) :
+                   (str[0] << 24) + (str[1] << 16) + (str[2] << 8) + (str[3]);
+}
+
 // Get the number of cores reported by the OS.
 int getNumCores();
 
