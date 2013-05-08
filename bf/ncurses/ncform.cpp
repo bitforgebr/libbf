@@ -202,22 +202,32 @@ bool NCForm::keyEvent(int key)
     {
         case KEY_UP:
             if (m_focusedItem > 0)
+            {
                 m_focusedItem--;
             
-            /* Go to previous field */
-            form_driver(m_form, REQ_PREV_FIELD);
-            form_driver(m_form, REQ_END_LINE);
+                if (m_focusedItem < m_fields.size() - 1)
+                {
+                    /* Go to previous field */
+                    form_driver(m_form, REQ_PREV_FIELD);
+                    form_driver(m_form, REQ_END_LINE);
+                }
+            }
             return true;
             
         case KEY_DOWN:
             if (m_focusedItem < m_fields.size() + m_buttons.size() - 1)
+            {
                 m_focusedItem++;
             
-            /* Go to next field */
-            form_driver(m_form, REQ_NEXT_FIELD);
-            /* Go to the end of the present buffer */
-            /* Leaves nicely at the last character */
-            form_driver(m_form, REQ_END_LINE);
+                if (m_focusedItem < m_fields.size())
+                {
+                    /* Go to next field */
+                    form_driver(m_form, REQ_NEXT_FIELD);
+                    /* Go to the end of the present buffer */
+                    /* Leaves nicely at the last character */
+                    form_driver(m_form, REQ_END_LINE);
+                }
+            }
             return true;
         
         case 10:
