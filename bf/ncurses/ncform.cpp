@@ -67,7 +67,6 @@ void NCForm::addButtons(NCFormButtonVector buttons)
 
 void NCForm::initialize()
 {
-    int x = m_x, y = m_y;
     
     /*
      FIELD *new_field(int height, int width,
@@ -75,11 +74,18 @@ void NCForm::initialize()
                         int offscreen, int nbuffers);
     */
 
+    std::size_t textWidth = 0;
+    for(auto &field : m_fields)
+        textWidth = std::max(textWidth, field.text.length());
+    textWidth += 2;
+        
+    int x = m_x + textWidth, y = m_y;
+    
     m_ncFields.reserve(m_fields.size() + 1);
     
     for(auto &field : m_fields)
     {
-        FIELD *f = new_field(1, field.width, y, x + 10, 0, 0);
+        FIELD *f = new_field(1, field.width, y, x, 0, 0);
         
         set_field_back(f, A_UNDERLINE);
         field_opts_off(f, O_AUTOSKIP);   // Don't go to next field when this Field is filled up  
@@ -108,8 +114,6 @@ void NCForm::initialize()
 
         m_ncFields.push_back(f);
         
-        mvprintw(y, x, field.text.c_str());
-        
         y += 2;
     }
     
@@ -124,24 +128,25 @@ void NCForm::initialize()
     // Create the window to be associated with the form 
     //m_formWindow = newwin(rows + 4, cols + 4, m_y, m_x);
     //keypad(m_formWindow, TRUE);
+    m_formWindow = getWindow();
+    
+    const int formMargin = 1;
     
     // Set main window and sub window 
-    set_form_win(m_form, getWindow());
-    set_form_sub(m_form, derwin(getWindow(), rows, cols, 2, 2));
+    set_form_win(m_form, m_formWindow);
+    set_form_sub(m_form, derwin(m_formWindow, rows, cols, formMargin, formMargin));
     
     box(m_formWindow, 0, 0);
     
     post_form(m_form);
-    refresh();
     
-    x = m_x, y = m_y;
-      
+    x = m_x + formMargin, y = m_y + formMargin;
+    
     for(auto &field : m_fields)
     {
-        mvprintw(y, x, field.text.c_str());
+        mvwprintw(m_formWindow, y, x, "%s", field.text.c_str());
         y += 2;
     }
-    refresh();
 }
 
 void NCForm::redraw()
