@@ -66,6 +66,11 @@ void NCForm::addButtons(NCFormButtonVector buttons)
     }
 }
 
+std::string NCForm::getFieldData(int index)
+{
+    return field_buffer(m_ncFields[index], 0);
+}
+
 void NCForm::initialize()
 {
     

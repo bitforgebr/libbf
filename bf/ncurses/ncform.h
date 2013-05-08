@@ -95,6 +95,8 @@ public:
     virtual void redraw() override;
     virtual void setTitle(std::string _title) { m_title = _title; };
 
+    std::string getFieldData(int index);
+
 protected:
     void initialize();
     virtual bool keyEvent(int key);
