@@ -52,6 +52,8 @@ void NCWindow::addWidget(NCWidgetRef widget)
 
 void NCWindow::redraw()
 {
+    m_needRedraw = false;
+
     for(NCWidgetRef widget : m_widgets)
         widget->redraw();
     
@@ -72,10 +74,13 @@ bool NCWindow::keyEvent(int key)
 
 bool NCWindow::needRedraw() const
 {
+    if (m_needRedraw)
+        return true;
+    
     for(auto widget : m_widgets)
         if (widget->needRedraw())
             return true;
-        
+
     return false;
 }
 

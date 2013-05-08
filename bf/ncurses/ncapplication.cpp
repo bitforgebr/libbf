@@ -59,8 +59,14 @@ bool NCApplication::removeWindow(const NCWindowRef& window)
         if (*it == window)
         {
             m_windows.erase(it);
+
+            m_terminated = m_windows.empty();
+            if (!m_windows.empty())
+                (*m_windows.rbegin())->setNeedRedraw();
+
             clear();
             refresh();
+
             return true;
         }
     }

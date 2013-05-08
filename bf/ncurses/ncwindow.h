@@ -47,6 +47,8 @@ protected:
     int m_x = 0;
     int m_y = 0;
     
+    bool m_needRedraw = true;
+
     void clearFocus();
     
 public:
@@ -62,6 +64,7 @@ public:
     int y() const { return m_y; }
 
     bool needRedraw() const;
+    void setNeedRedraw() { m_needRedraw = true; }
 };
 
 
