@@ -26,6 +26,14 @@ NCApplication::NCApplication()
     clear();
     noecho();
     cbreak();   /* Line buffering disabled. pass on everything */
+    
+    m_hasColours = has_colors();
+    if (m_hasColours)
+    {
+        start_color();
+        
+        init_pair(1, COLOR_BLUE, COLOR_BLACK);
+    }
 }
     
 NCApplication::~NCApplication()
@@ -41,6 +49,21 @@ void NCApplication::terminate()
 void NCApplication::addWindow(NCWindowRef window)
 {
     m_windows.push_back(std::move(window));
+}
+
+bool NCApplication::removeWindow(const NCWindowRef& window)
+{
+    auto it = m_windows.begin(), end = m_windows.end();
+    for(; it != end; it++)
+    {
+        if (*it == window)
+        {
+            m_windows.erase(it);
+            return true;
+        }
+    }
+    
+    return false;
 }
 
 int NCApplication::exec()
@@ -63,8 +86,15 @@ int NCApplication::exec()
             
             if (window->keyEvent(wgetch(window->m_window)))
             {
+                if (m_hasColours)
+                    attron(COLOR_PAIR(1));
+                    
                 window->redraw();
                 refresh();
+                
+                if (m_hasColours)
+                    attroff(COLOR_PAIR(1));
+                
                 break;
             }
         }

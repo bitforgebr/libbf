@@ -67,7 +67,7 @@ typedef std::vector<NCFormField> NCFormFieldVector;
 struct NCFormButton
 {
     std::string text;
-    std::function<void()> callbck;
+    std::function<void()> callback;
 };
 typedef std::vector<NCFormButton> NCFormButtonVector;
 
@@ -81,6 +81,8 @@ private:
     
     NCFormFieldVector   m_fields;
     NCFormButtonVector  m_buttons;
+    
+    int                 m_focusedItem = 0;
     
 public:
     NCForm(NCWindowRef parent, int x, int y);

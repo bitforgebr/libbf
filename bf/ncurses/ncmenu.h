@@ -29,7 +29,7 @@
 struct NCMenuItem
 {
     std::string text;
-    std::function<void()> callbck;
+    std::function<void()> callback;
 };
 typedef std::vector<NCMenuItem> NCMenuItemVector;
 

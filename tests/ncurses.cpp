@@ -1,15 +1,26 @@
 
 #include <ncurses.h>
-#include <boost/concept_check.hpp>
 
 #include <bf/ncurses/ncapplication.h>
 #include <bf/ncurses/ncwindow.h>
 #include <bf/ncurses/ncmenu.h>
 #include <bf/ncurses/ncform.h>
 
+void formOK(NCApplication *app, NCWindowRef formWindow)
+{
+    mvprintw(40, 0, "OK Pressed!");
+    refresh();
+}
+
+void formClose(NCApplication *app, NCWindowRef formWindow)
+{
+    mvprintw(40, 0, "Close Pressed!");
+    refresh();
+}
+
 void fn1(NCApplication *app)
 {
-    mvprintw(24, 0, "Function 1");
+    mvprintw(40, 0, "Function 1");
     refresh();
     
     auto window = std::make_shared<NCWindow>(4, 4, 40, 20);
@@ -31,6 +42,22 @@ void fn1(NCApplication *app)
     
     form->addFields(std::move(fields));
     
+    NCFormButtonVector buttons;
+    
+    NCFormButton b;
+    
+    b.text = "OK";
+    b.callback = std::bind(formOK, app, form);
+    
+    buttons.push_back(b);
+    
+    b.text = "Cancel";
+    b.callback = std::bind(formClose, app, form);
+    
+    buttons.push_back(b);
+    
+    form->addButtons(std::move(buttons));
+    
     window->addWidget(form);
     
     app->addWindow(window);
@@ -38,7 +65,7 @@ void fn1(NCApplication *app)
 
 void fn2()
 {
-    mvprintw(24, 0, "Function 2");
+    mvprintw(40, 0, "Function 2");
     refresh();
 }
 
@@ -54,18 +81,17 @@ int main()
         NCMenuItem item;
         
         item.text = "Hello";
-        item.callbck = std::bind(fn1, &app);;
+        item.callback = std::bind(fn1, &app);
         menuItems.push_back(item);
         
         item.text = "World";
-        item.callbck = fn2;
+        item.callback = fn2;
         menuItems.push_back(item);
         
         item.text = "Exit";
-        item.callbck = std::bind(&NCApplication::terminate, &app);
+        item.callback = std::bind(&NCApplication::terminate, &app);
         menuItems.push_back(item);
-        
-        
+                
         auto menu = std::make_shared<NCMenu>(window);
         menu->addMenuOptions(std::move(menuItems));
         

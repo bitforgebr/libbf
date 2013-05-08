@@ -135,7 +135,7 @@ bool NCMenu::keyEvent(int key)
         
         case 10:
         {
-            auto fn = m_menuItems[m_focusedItem].callbck;
+            auto fn = m_menuItems[m_focusedItem].callback;
             if (fn) fn();
             return true;
         }

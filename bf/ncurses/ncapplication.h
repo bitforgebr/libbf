@@ -28,6 +28,8 @@ class NCApplication
 {
 private:
     bool m_terminated = false;
+    bool m_hasColours = false;
+    
     NCWindowRefVector m_windows;
     
 public:
@@ -35,7 +37,10 @@ public:
     virtual ~NCApplication();
     
     void terminate();
+    
     void addWindow(NCWindowRef window);
+    bool removeWindow(const NCWindowRef &window);
+    
     int exec();
 };
 

@@ -147,6 +147,8 @@ void NCForm::initialize()
         mvwprintw(m_formWindow, y, x, "%s", field.text.c_str());
         y += 2;
     }
+    
+    wrefresh(m_formWindow);
 }
 
 void NCForm::redraw()
@@ -154,29 +156,70 @@ void NCForm::redraw()
     if (m_ncFields.empty())
         initialize();
     
-    wrefresh(m_formWindow);
+    int index = m_fields.size();
+    int x = m_x, y = m_y + (m_fields.size() * 2);
+    
+    auto window = getWindow();
+    box(window, 0, 0);
+    
+    for(auto &button : m_buttons)
+    {
+        if (index == m_focusedItem) wattron(window, A_REVERSE);
+        if (!button.text.empty())     mvwprintw(window, y, x, "< %s >", button.text.c_str());
+        if (index == m_focusedItem) wattroff(window, A_REVERSE);
+        
+        index++;
+        
+        x += button.text.length() + 6;
+    }
+       
+    wrefresh(window);
 }
 
 bool NCForm::keyEvent(int key)
 {
     switch(key)
     {
+        case KEY_UP:
+            if (m_focusedItem > 0)
+                m_focusedItem--;
+            
+            /* Go to previous field */
+            form_driver(m_form, REQ_PREV_FIELD);
+            form_driver(m_form, REQ_END_LINE);
+            return true;
+            
         case KEY_DOWN:
+            if (m_focusedItem < m_fields.size() + m_buttons.size() - 1)
+                m_focusedItem++;
+            
             /* Go to next field */
             form_driver(m_form, REQ_NEXT_FIELD);
             /* Go to the end of the present buffer */
             /* Leaves nicely at the last character */
             form_driver(m_form, REQ_END_LINE);
             return true;
-        case KEY_UP:
-            /* Go to previous field */
-            form_driver(m_form, REQ_PREV_FIELD);
-            form_driver(m_form, REQ_END_LINE);
+        
+        case 10:
+        {
+            auto buttonIndex = m_focusedItem - m_fields.size();
+            if (buttonIndex >= 0)
+            {
+                auto fn = m_buttons[buttonIndex].callback;
+                if (fn)
+                    fn();
+            }
+            
             return true;
+        }
+            
         default:
-            /* If this is a normal character, it gets */
-            /* Printed                */    
-            form_driver(m_form, key);
+            if (m_focusedItem < m_fields.size())
+            {
+                /* If this is a normal character, it gets */
+                /* Printed                */    
+                form_driver(m_form, key);
+            }
             return true;
     }
     return NCWidget::keyEvent(key);
