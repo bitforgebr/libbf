@@ -9,13 +9,13 @@
 void formOK(NCApplication *app, NCWindowRef formWindow)
 {
     mvprintw(40, 0, "OK Pressed!");
-    refresh();
+    app->removeWindow(formWindow);
 }
 
 void formClose(NCApplication *app, NCWindowRef formWindow)
 {
     mvprintw(40, 0, "Close Pressed!");
-    refresh();
+    app->removeWindow(formWindow);
 }
 
 void fn1(NCApplication *app)
@@ -47,12 +47,12 @@ void fn1(NCApplication *app)
     NCFormButton b;
     
     b.text = "OK";
-    b.callback = std::bind(formOK, app, form);
+    b.callback = std::bind(formOK, app, window);
     
     buttons.push_back(b);
     
     b.text = "Cancel";
-    b.callback = std::bind(formClose, app, form);
+    b.callback = std::bind(formClose, app, window);
     
     buttons.push_back(b);
     

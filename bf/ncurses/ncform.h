@@ -26,7 +26,7 @@
 #include <string>
 #include <vector>
 
-#include <form.h>
+#include <ncurses/form.h>
 
 enum NCFormFieldValidation
 {
@@ -41,19 +41,19 @@ struct NCFormField
 {
     NCFormField() {};
     ~NCFormField() {};
-    
+
     std::string text;
     std::string value;
-    
+
     NCFormFieldValidation validation = fvNone;
 
     std::size_t width = 10;
-    
+
     // Validations
-    
+
     // AlphaNumeric
     std::size_t max_length = -1;
-        
+
     // Integer
     int intPadding = 0;
     int minIntValue = 0;
@@ -76,23 +76,23 @@ class NCForm: public NCWidget
 private:
     FORM   *m_form = nullptr;
     WINDOW *m_formWindow = nullptr;
-    
+
     std::vector<FIELD*> m_ncFields;
-    
+
     NCFormFieldVector   m_fields;
     NCFormButtonVector  m_buttons;
-    
+
     int                 m_focusedItem = 0;
-    
+
 public:
     NCForm(NCWindowRef parent, int x, int y);
     virtual ~NCForm();
-    
+
     void addFields(NCFormFieldVector fields);
     void addButtons(NCFormButtonVector buttons);
-    
+
     virtual void redraw() override;
-    
+
 protected:
     void initialize();
     virtual bool keyEvent(int key);

@@ -25,6 +25,7 @@
 
 #include <vector>
 #include <functional>
+#include <string>
 
 struct NCMenuItem
 {

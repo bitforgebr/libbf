@@ -59,6 +59,8 @@ bool NCApplication::removeWindow(const NCWindowRef& window)
         if (*it == window)
         {
             m_windows.erase(it);
+            clear();
+            refresh();
             return true;
         }
     }
@@ -77,26 +79,22 @@ int NCApplication::exec()
     }
     
     // Main loop
-    while(!m_terminated)
+    while(!m_terminated && !m_windows.empty())
     {
-        auto it = m_windows.rbegin(), end = m_windows.rend();
-        for(; it != end; it++)
+        auto window = *m_windows.rbegin();
+        
+        if (window->keyEvent(wgetch(window->m_window)))
         {
-            auto window = *it;
+            window = *m_windows.rbegin();
+            if (m_hasColours)
+                attron(COLOR_PAIR(1));
+                
+            window->redraw();
+            refresh();
             
-            if (window->keyEvent(wgetch(window->m_window)))
-            {
-                if (m_hasColours)
-                    attron(COLOR_PAIR(1));
-                    
-                window->redraw();
-                refresh();
-                
-                if (m_hasColours)
-                    attroff(COLOR_PAIR(1));
-                
-                break;
-            }
+            if (m_hasColours)
+                attroff(COLOR_PAIR(1));
+            
         }
     }
     
