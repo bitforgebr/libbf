@@ -23,6 +23,20 @@
 
 #include <ncurses.h>
 #include "ncwindow.h"
+#include <map>
+
+enum NCStyleType {
+    stNormal = 1,
+    stHighlight
+};
+
+enum NCStyleColor {
+    scBlack = COLOR_BLACK,
+    scWhite = COLOR_WHITE,
+    scBlue = COLOR_BLUE
+};
+
+typedef std::map<NCStyleType, std::pair<NCStyleColor, NCStyleColor>> NCStyleMap;
 
 class NCApplication
 {
@@ -32,9 +46,17 @@ private:
     
     NCWindowRefVector m_windows;
     
+    NCStyleMap m_styleMap;
+    
 public:
     NCApplication();
     virtual ~NCApplication();
+    
+    void setStyle(NCStyleType _type, NCStyleColor _color1, NCStyleColor _color2)
+    {
+        m_styleMap[_type] = std::make_pair(_color1, _color2);
+        init_pair(_type, _color1, _color2);
+    }
     
     void terminate();
     

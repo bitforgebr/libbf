@@ -83,6 +83,7 @@ private:
     NCFormButtonVector  m_buttons;
 
     int                 m_focusedItem = 0;
+    std::string m_title = "Form";
 
 public:
     NCForm(NCWindowRef parent, int x, int y);
@@ -92,6 +93,7 @@ public:
     void addButtons(NCFormButtonVector buttons);
 
     virtual void redraw() override;
+    virtual void setTitle(std::string _title) { m_title = _title; };
 
 protected:
     void initialize();

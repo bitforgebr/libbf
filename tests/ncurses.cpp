@@ -32,6 +32,9 @@ void fn1(NCApplication *app)
     NCFormField f;
     
     f.text = "IP:";
+    f.width = 16;
+    f.regexp = "[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}";
+    f.validation = fvRegExp;
     fields.push_back(f);
     
     f.text = "Mask:";
@@ -57,6 +60,8 @@ void fn1(NCApplication *app)
     buttons.push_back(b);
     
     form->addButtons(std::move(buttons));
+    
+    form->setTitle("Configurações de Rede");
     
     window->addWidget(form);
     

@@ -20,6 +20,7 @@
 
 #include "ncform.h"
 #include <cassert>
+#include "ncapplication.h"
 
 NCForm::NCForm(NCWindowRef parent, int x, int y): 
     NCWidget(parent, x, y)
@@ -79,12 +80,9 @@ void NCForm::initialize()
         textWidth = std::max(textWidth, field.text.length());
     textWidth += 2;
         
-    int x = m_x + textWidth, y = m_y;
+    int x = m_x + textWidth, y = m_y + 1;
     
     m_ncFields.reserve(m_fields.size() + 1);
-    
-    init_pair(2, COLOR_WHITE, COLOR_BLUE);
-    init_pair(4, COLOR_WHITE, COLOR_BLACK);
     
     for(auto &field : m_fields)
     {
@@ -133,6 +131,8 @@ void NCForm::initialize()
     //keypad(m_formWindow, TRUE);
     m_formWindow = getWindow();
     
+    
+    
     const int formMargin = 1;
     
     // Set main window and sub window 
@@ -143,8 +143,9 @@ void NCForm::initialize()
     
     post_form(m_form);
     
-    x = m_x + formMargin, y = m_y + formMargin;
+    x = m_x + formMargin, y = m_y + formMargin + 1;
     
+    mvwprintw(m_formWindow, m_y, m_x, "%s", m_title.c_str());
     for(auto &field : m_fields)
     {
         mvwprintw(m_formWindow, y, x, "%s", field.text.c_str());
@@ -160,7 +161,7 @@ void NCForm::redraw()
         initialize();
     
     int index = 0;
-    int x = m_x, y = m_y + (m_fields.size() * 2);
+    int x = m_x, y = m_y + (m_fields.size() * 2) + 2;
     
     auto window = getWindow();
     box(window, 0, 0);
@@ -169,13 +170,13 @@ void NCForm::redraw()
     {
         if (index == m_focusedItem)
         {
-            set_field_fore(field, COLOR_PAIR(2));
-            set_field_back(field, COLOR_PAIR(2));
+            set_field_fore(field, COLOR_PAIR(stHighlight));
+            set_field_back(field, COLOR_PAIR(stHighlight));
         }
         else
         {
-            set_field_fore(field, COLOR_PAIR(4));
-            set_field_back(field, COLOR_PAIR(4));
+            set_field_fore(field, COLOR_PAIR(stNormal));
+            set_field_back(field, COLOR_PAIR(stNormal));
         }
         index++;
     }
@@ -203,30 +204,42 @@ bool NCForm::keyEvent(int key)
         case KEY_UP:
             if (m_focusedItem > 0)
             {
-                m_focusedItem--;
+                m_focusedItem = std::min(m_focusedItem-1, (int)(m_fields.size()-1));
             
-                if (m_focusedItem < m_fields.size() - 1)
-                {
-                    /* Go to previous field */
-                    form_driver(m_form, REQ_PREV_FIELD);
-                    form_driver(m_form, REQ_END_LINE);
-                }
+                form_driver(m_form, REQ_PREV_FIELD);
+                form_driver(m_form, REQ_END_LINE);
             }
             return true;
             
         case KEY_DOWN:
-            if (m_focusedItem < m_fields.size() + m_buttons.size() - 1)
+            if (m_focusedItem < m_fields.size())
             {
                 m_focusedItem++;
             
-                if (m_focusedItem < m_fields.size())
-                {
-                    /* Go to next field */
-                    form_driver(m_form, REQ_NEXT_FIELD);
-                    /* Go to the end of the present buffer */
-                    /* Leaves nicely at the last character */
-                    form_driver(m_form, REQ_END_LINE);
-                }
+                form_driver(m_form, REQ_NEXT_FIELD);
+                form_driver(m_form, REQ_END_LINE);
+            }
+            return true;
+        
+        case KEY_RIGHT:
+            // Only for buttons
+            if (m_focusedItem >= m_fields.size() && m_focusedItem < m_fields.size() + m_buttons.size() - 1)
+            {
+                m_focusedItem++;
+            
+                form_driver(m_form, REQ_NEXT_FIELD);
+                form_driver(m_form, REQ_END_LINE);
+            }
+            return true;
+        
+        case KEY_LEFT:
+            // Only for buttons
+            if (m_focusedItem > m_fields.size())
+            {
+                m_focusedItem--;
+            
+                form_driver(m_form, REQ_PREV_FIELD);
+                form_driver(m_form, REQ_END_LINE);
             }
             return true;
         

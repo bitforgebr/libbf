@@ -61,7 +61,20 @@ endif()
 ############### Intallation and Packaging #####################################
 
 install(TARGETS bf DESTINATION lib)
-install(FILES bf/bf.h bf/ncstring.h bf/log.h bf/buffers.h bf/inthex.h bf/service.h DESTINATION include/bf)
+install(FILES 
+    bf/bf.h 
+    bf/ncstring.h 
+    bf/log.h 
+    bf/buffers.h 
+    bf/inthex.h 
+    bf/service.h 
+    bf/ncurses/ncapplication.h
+    bf/ncurses/ncform.h
+    bf/ncurses/ncmenu.h
+    bf/ncurses/ncmenu.h
+    bf/ncurses/ncwidget.h
+    bf/ncurses/ncwindow.h
+    DESTINATION include/bf)
 
 set(CPACK_GENERATOR "RPM;TGZ;STGZ;TBZ2")
 

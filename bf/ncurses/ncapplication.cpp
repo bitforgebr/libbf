@@ -31,8 +31,8 @@ NCApplication::NCApplication()
     if (m_hasColours)
     {
         start_color();
-        
-        init_pair(1, COLOR_BLUE, COLOR_BLACK);
+        setStyle(stNormal, scWhite, scBlack);
+        setStyle(stHighlight, scWhite, scBlue);
     }
 }
     
