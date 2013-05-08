@@ -180,6 +180,8 @@ void NCForm::redraw()
         index++;
     }
     
+    index--;
+    
     for(auto &button : m_buttons)
     {
         if (index == m_focusedItem) wattron(window, A_REVERSE);
@@ -220,7 +222,7 @@ bool NCForm::keyEvent(int key)
         
         case 10:
         {
-            auto buttonIndex = m_focusedItem - m_fields.size();
+            int buttonIndex = m_focusedItem - m_fields.size();
             if (buttonIndex >= 0)
             {
                 auto fn = m_buttons[buttonIndex].callback;
