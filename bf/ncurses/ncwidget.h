@@ -44,7 +44,7 @@ protected:
     int m_x = 0;
     int m_y = 0;
     
-    WINDOW* getWindow();
+    
     
     void clearFocus()
     {
@@ -63,6 +63,8 @@ public:
     }
         
     void setFocus();
+    
+    WINDOW* getWindow();
 };
 
 #endif // NCWIDGET_H
