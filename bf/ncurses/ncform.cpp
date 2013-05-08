@@ -160,7 +160,7 @@ void NCForm::redraw()
     if (m_ncFields.empty())
         initialize();
     
-    int index = 0;
+    unsigned int index = 0;
     int x = m_x, y = m_y + (m_fields.size() * 2) + 2;
     
     auto window = getWindow();
@@ -204,7 +204,7 @@ bool NCForm::keyEvent(int key)
         case KEY_UP:
             if (m_focusedItem > 0)
             {
-                m_focusedItem = std::min(m_focusedItem-1, (int)(m_fields.size()-1));
+                m_focusedItem = std::min(m_focusedItem-1, (unsigned int)m_fields.size() - 1);
             
                 form_driver(m_form, REQ_PREV_FIELD);
                 form_driver(m_form, REQ_END_LINE);
