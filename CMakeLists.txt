@@ -6,6 +6,9 @@ cmake_minimum_required(VERSION 2.8)
 
 add_definitions(-Wall -Wextra -ftrack-macro-expansion=2 -fPIC)
 
+set(CURSES_NEED_NCURSES True)
+find_package(Curses)
+
 find_package(CheckForCPP11 HINTS $ENV{MISC_CMAKE_MODULES})
 
 if ( CPP11 )
@@ -17,7 +20,17 @@ endif()
 
 include_directories(.)
 
-add_library(bf bf/bf.cpp bf/log.cpp)
+add_library(bf 
+    bf/bf.cpp 
+    bf/log.cpp
+
+    bf/ncurses/ncapplication.cpp
+    bf/ncurses/ncform.cpp
+    bf/ncurses/ncmenu.cpp
+    bf/ncurses/ncmenu.cpp
+    bf/ncurses/ncwidget.cpp
+    bf/ncurses/ncwindow.cpp
+)
 
 ############### Unit tests ####################################################
 
@@ -33,13 +46,16 @@ if(build_tests)
     
 
     add_executable(runUnitTests tests/int_hex_tests.cpp tests/circularbuffer_test.cpp tests/utils_tests.cpp tests/log_test.cpp)
-    
     target_link_libraries(runUnitTests bf ${Boost_LIBRARIES} ${LIBGTEST_MAIN} ${LIBGTEST} pthread)
-   
+    
     add_test(
         NAME runUnitTests
         COMMAND runUnitTests
     )
+    
+    include_directories(${CURSES_INCLUDE_PATH})
+    add_executable(ncurses tests/ncurses.cpp)
+    target_link_libraries(ncurses bf ${Boost_LIBRARIES}  pthread ${CURSES_LIBRARIES})
 endif()
 
 ############### Intallation and Packaging #####################################
