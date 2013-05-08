@@ -6,6 +6,11 @@
 #include <bf/ncurses/ncmenu.h>
 #include <bf/ncurses/ncform.h>
 
+#include <fstream>
+#include <sys/types.h>
+#include <unistd.h>
+
+
 void formOK(NCApplication *app, NCWindowRef formWindow)
 {
     mvprintw(40, 0, "OK Pressed!");
@@ -76,6 +81,12 @@ void fn2()
 
 int main()
 {   
+
+    {
+        std::ofstream pid("/tmp/libbf-ncurses.pid", std::ios::ate);
+        pid << getpid();
+    }
+
     NCApplication app;
 
     {

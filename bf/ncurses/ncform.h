@@ -26,7 +26,7 @@
 #include <string>
 #include <vector>
 
-#include <ncurses/form.h>
+#include <form.h>
 
 enum NCFormFieldValidation
 {
@@ -82,7 +82,7 @@ private:
     NCFormFieldVector   m_fields;
     NCFormButtonVector  m_buttons;
 
-    int                 m_focusedItem = 0;
+    unsigned int        m_focusedItem = 0;
     std::string m_title = "Form";
 
 public:
