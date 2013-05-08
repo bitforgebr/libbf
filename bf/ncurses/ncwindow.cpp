@@ -70,3 +70,12 @@ bool NCWindow::keyEvent(int key)
     return false;
 }
 
+bool NCWindow::needRedraw() const
+{
+    for(auto widget : m_widgets)
+        if (widget->needRedraw())
+            return true;
+        
+    return false;
+}
+

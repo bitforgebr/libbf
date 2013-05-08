@@ -40,11 +40,10 @@ class NCWidget
 protected:
     NCWindowRef m_parent;
     bool        m_hasFocus = false;
+    bool        m_needRedraw = true;
     
     int m_x = 0;
     int m_y = 0;
-    
-    
     
     void clearFocus()
     {
@@ -65,6 +64,8 @@ public:
     void setFocus();
     
     WINDOW* getWindow();
+
+    bool needRedraw() const { return m_needRedraw; }
 };
 
 #endif // NCWIDGET_H

@@ -198,8 +198,8 @@ void NCForm::redraw()
         
         x += button.text.length() + 6;
     }
-       
-    wrefresh(window);
+
+    m_needRedraw = false;
 }
 
 bool NCForm::keyEvent(int key)
@@ -213,6 +213,7 @@ bool NCForm::keyEvent(int key)
             
                 form_driver(m_form, REQ_PREV_FIELD);
                 form_driver(m_form, REQ_END_LINE);
+                m_needRedraw = true;
             }
             return true;
             
@@ -223,6 +224,7 @@ bool NCForm::keyEvent(int key)
             
                 form_driver(m_form, REQ_NEXT_FIELD);
                 form_driver(m_form, REQ_END_LINE);
+                m_needRedraw = true;
             }
             return true;
         
@@ -234,6 +236,7 @@ bool NCForm::keyEvent(int key)
             
                 form_driver(m_form, REQ_NEXT_FIELD);
                 form_driver(m_form, REQ_END_LINE);
+                m_needRedraw = true;
             }
             return true;
         
@@ -245,6 +248,7 @@ bool NCForm::keyEvent(int key)
             
                 form_driver(m_form, REQ_PREV_FIELD);
                 form_driver(m_form, REQ_END_LINE);
+                m_needRedraw = true;
             }
             return true;
         
@@ -259,6 +263,16 @@ bool NCForm::keyEvent(int key)
             }
             
             return true;
+        }
+
+        case 127:
+        case KEY_BACKSPACE:
+        {
+            if (m_focusedItem < m_fields.size())
+            {
+                form_driver(m_form, REQ_DEL_PREV);
+            }
+            break;
         }
             
         default:

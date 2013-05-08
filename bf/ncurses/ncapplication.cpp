@@ -86,15 +86,18 @@ int NCApplication::exec()
         if (window->keyEvent(wgetch(window->m_window)))
         {
             window = *m_windows.rbegin();
-            if (m_hasColours)
-                attron(COLOR_PAIR(1));
-                
-            window->redraw();
-            refresh();
-            
-            if (m_hasColours)
-                attroff(COLOR_PAIR(1));
-            
+
+            bool needRedraw = false;
+            for(auto it : m_windows)
+            {
+                needRedraw |= it->needRedraw();
+
+                if (needRedraw)
+                    window->redraw();
+            }
+
+            if (needRedraw)
+                refresh();
         }
     }
     

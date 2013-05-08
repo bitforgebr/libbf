@@ -60,6 +60,8 @@ public:
     
     int x() const { return m_x; }
     int y() const { return m_y; }
+
+    bool needRedraw() const;
 };
 
 

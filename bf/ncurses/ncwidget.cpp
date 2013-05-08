@@ -35,7 +35,7 @@ bool NCWidget::keyEvent(int key)
 
 void NCWidget::redraw()
 {
-
+    m_needRedraw = false;
 }
 
 WINDOW* NCWidget::getWindow()

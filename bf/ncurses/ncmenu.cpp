@@ -81,8 +81,8 @@ void NCMenu::redraw()
         else
             x += m_margin;
     }
-    
-    wrefresh(window);
+
+    m_needRedraw = false;
 }
 
 bool NCMenu::keyEvent(int key)
@@ -94,7 +94,10 @@ bool NCMenu::keyEvent(int key)
             if (m_orientation == Horizontal)
             {
                 if (m_focusedItem > 0)
+                {
                     m_focusedItem--;
+                    m_needRedraw = true;
+                }
                 return true;
             }
             break;
@@ -105,7 +108,10 @@ bool NCMenu::keyEvent(int key)
             if (m_orientation == Horizontal)
             {
                 if (m_focusedItem < m_menuItems.size() - 1)
+                {
                     m_focusedItem++;
+                    m_needRedraw = true;
+                }
                 return true;
             }
             break;
@@ -116,7 +122,10 @@ bool NCMenu::keyEvent(int key)
             if (m_orientation == Vertical)
             {
                 if (m_focusedItem > 0)
+                {
                     m_focusedItem--;
+                    m_needRedraw = true;
+                }
                 return true;
             }
             break;
@@ -127,7 +136,10 @@ bool NCMenu::keyEvent(int key)
             if (m_orientation == Vertical)
             {
                 if (m_focusedItem < m_menuItems.size() - 1)
+                {
                     m_focusedItem++;
+                    m_needRedraw = true;
+                }
                 return true;
             }
             break;
@@ -139,10 +151,6 @@ bool NCMenu::keyEvent(int key)
             if (fn) fn();
             return true;
         }
-        
-        default:
-            mvprintw(24, 0, "Charcter pressed is = %3d Hopefully it can be printed as '%c'", key, key);
-            refresh();
     }
     
     return false;
