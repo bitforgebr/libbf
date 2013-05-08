@@ -20,6 +20,9 @@
 
 #include "ncapplication.h"
 
+#include <unistd.h>
+#include <sys/select.h>
+
 NCApplication::NCApplication()
 {
     initscr();
@@ -85,13 +88,29 @@ int NCApplication::exec()
     }
     
     // Main loop
-    while(!m_terminated && !m_windows.empty())
+    while(!m_terminated)
     {
-        auto window = *m_windows.rbegin();
+        fd_set read, write, except;
+        FD_ZERO(&read);
+        FD_ZERO(&write);
+        FD_ZERO(&except);
         
-        if (window->keyEvent(wgetch(window->m_window)))
+        FD_SET(STDIN_FILENO, &read);
+        
+        int maxFd = STDIN_FILENO + 1;
+        
+        struct timeval timeout = { 1, 0 };
+        int ret = select(maxFd, &read, &write, &except, &timeout);
+        
+        if (ret >= 0)
         {
-            window = *m_windows.rbegin();
+            if (ret > 0)
+            {
+                auto window = *m_windows.rbegin();
+                window->keyEvent(wgetch(window->m_window));
+            }
+            
+            auto window = *m_windows.rbegin();
 
             bool needRedraw = false;
             for(auto it : m_windows)
@@ -101,9 +120,6 @@ int NCApplication::exec()
                 if (needRedraw)
                     window->redraw();
             }
-
-            if (needRedraw)
-                refresh();
         }
     }
     
