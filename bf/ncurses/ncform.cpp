@@ -83,6 +83,9 @@ void NCForm::initialize()
     
     m_ncFields.reserve(m_fields.size() + 1);
     
+    init_pair(2, COLOR_WHITE, COLOR_BLUE);
+    init_pair(4, COLOR_WHITE, COLOR_BLACK);
+    
     for(auto &field : m_fields)
     {
         FIELD *f = new_field(1, field.width, y, x, 0, 0);
@@ -156,11 +159,26 @@ void NCForm::redraw()
     if (m_ncFields.empty())
         initialize();
     
-    int index = m_fields.size();
+    int index = 0;
     int x = m_x, y = m_y + (m_fields.size() * 2);
     
     auto window = getWindow();
     box(window, 0, 0);
+    
+    for(auto &field : m_ncFields)
+    {
+        if (index == m_focusedItem)
+        {
+            set_field_fore(field, COLOR_PAIR(2));
+            set_field_back(field, COLOR_PAIR(2));
+        }
+        else
+        {
+            set_field_fore(field, COLOR_PAIR(4));
+            set_field_back(field, COLOR_PAIR(4));
+        }
+        index++;
+    }
     
     for(auto &button : m_buttons)
     {
