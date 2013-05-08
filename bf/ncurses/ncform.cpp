@@ -19,8 +19,10 @@
  */
 
 #include "ncform.h"
-#include <cassert>
 #include "ncapplication.h"
+
+#include <cassert>
+#include <cstring>
 
 NCForm::NCForm(NCWindowRef parent, int x, int y): 
     NCWidget(parent, x, y)
@@ -209,22 +211,27 @@ bool NCForm::keyEvent(int key)
         case KEY_UP:
             if (m_focusedItem > 0)
             {
-                m_focusedItem = std::min(m_focusedItem-1, (unsigned int)m_fields.size() - 1);
             
-                form_driver(m_form, REQ_PREV_FIELD);
-                form_driver(m_form, REQ_END_LINE);
-                m_needRedraw = true;
+                if (form_driver(m_form, REQ_PREV_FIELD) == 0)
+                {
+                    form_driver(m_form, REQ_END_LINE);
+                    
+                    m_focusedItem = std::min(m_focusedItem-1, (unsigned int)m_fields.size() - 1);
+                    m_needRedraw = true;
+                }
             }
             return true;
             
         case KEY_DOWN:
             if (m_focusedItem < m_fields.size())
             {
-                m_focusedItem++;
-            
-                form_driver(m_form, REQ_NEXT_FIELD);
-                form_driver(m_form, REQ_END_LINE);
-                m_needRedraw = true;
+                if (form_driver(m_form, REQ_NEXT_FIELD) == 0)
+                {
+                    form_driver(m_form, REQ_END_LINE);
+                    
+                    m_focusedItem++;
+                    m_needRedraw = true;
+                }
             }
             return true;
         
@@ -233,9 +240,6 @@ bool NCForm::keyEvent(int key)
             if (m_focusedItem >= m_fields.size() && m_focusedItem < m_fields.size() + m_buttons.size() - 1)
             {
                 m_focusedItem++;
-            
-                form_driver(m_form, REQ_NEXT_FIELD);
-                form_driver(m_form, REQ_END_LINE);
                 m_needRedraw = true;
             }
             return true;
@@ -245,9 +249,6 @@ bool NCForm::keyEvent(int key)
             if (m_focusedItem > m_fields.size())
             {
                 m_focusedItem--;
-            
-                form_driver(m_form, REQ_PREV_FIELD);
-                form_driver(m_form, REQ_END_LINE);
                 m_needRedraw = true;
             }
             return true;
@@ -270,7 +271,8 @@ bool NCForm::keyEvent(int key)
         {
             if (m_focusedItem < m_fields.size())
             {
-                form_driver(m_form, REQ_DEL_PREV);
+                if (strlen(field_buffer(m_ncFields[m_focusedItem], 0)) > 1)
+                    form_driver(m_form, REQ_DEL_PREV);
             }
             break;
         }
@@ -281,6 +283,7 @@ bool NCForm::keyEvent(int key)
                 /* If this is a normal character, it gets */
                 /* Printed                */    
                 form_driver(m_form, key);
+                m_needRedraw = true;
             }
             return true;
     }
