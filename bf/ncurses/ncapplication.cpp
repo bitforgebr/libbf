@@ -110,15 +110,10 @@ int NCApplication::exec()
                 window->keyEvent(wgetch(window->m_window));
             }
             
-            auto window = *m_windows.rbegin();
-
-            bool needRedraw = false;
             for(auto it : m_windows)
             {
-                needRedraw |= it->needRedraw();
-
-                if (needRedraw)
-                    window->redraw();
+                if (it->needRedraw())
+                    it->redraw();
             }
         }
     }
