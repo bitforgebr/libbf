@@ -100,6 +100,9 @@ void NCForm::initialize()
         set_field_back(f, A_UNDERLINE);
         field_opts_off(f, O_AUTOSKIP);   // Don't go to next field when this Field is filled up  
 
+        if(!field.value.empty())
+            set_field_buffer(f, 0, field.value.c_str());
+
         switch(field.validation)
         {
             case fvNone: 
