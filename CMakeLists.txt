@@ -18,7 +18,8 @@ else()
     message(FATAL_ERROR "Need a C++ 11 compiler!")
 endif()
 
-include_directories(.)
+
+include_directories(. ${CURSES_INCLUDE_PATH} ${CURSES_INCLUDE_PATH}/ncurses )
 
 add_library(bf 
     bf/bf.cpp 
@@ -54,8 +55,6 @@ if(build_tests)
         NAME runUnitTests
         COMMAND runUnitTests
     )
-    
-    include_directories(${CURSES_INCLUDE_PATH} ${CURSES_INCLUDE_PATH}/ncurses )
     
     add_executable(ncurses tests/ncurses.cpp)
     target_link_libraries(ncurses bf ${Boost_LIBRARIES}  pthread ${CURSES_LIBRARIES})

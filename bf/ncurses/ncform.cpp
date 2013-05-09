@@ -103,6 +103,7 @@ void NCForm::initialize()
         if(!field.value.empty())
             set_field_buffer(f, 0, field.value.c_str());
 
+
         switch(field.validation)
         {
             case fvNone: 
