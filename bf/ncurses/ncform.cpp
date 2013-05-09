@@ -24,6 +24,8 @@
 #include <cassert>
 #include <cstring>
 
+#include <bf/bf.h>
+
 NCForm::NCForm(NCWindowRef parent, int x, int y): 
     NCWidget(parent, x, y)
 {
@@ -70,7 +72,7 @@ void NCForm::addButtons(NCFormButtonVector buttons)
 
 std::string NCForm::getFieldData(int index)
 {
-    return field_buffer(m_ncFields[index], 0);
+    return bitforge::stringStrip(field_buffer(m_ncFields[index], 0));
 }
 
 void NCForm::initialize()
@@ -97,7 +99,6 @@ void NCForm::initialize()
         
         set_field_back(f, A_UNDERLINE);
         field_opts_off(f, O_AUTOSKIP);   // Don't go to next field when this Field is filled up  
-        
         switch(field.validation)
         {
             case fvNone: 
@@ -164,6 +165,8 @@ void NCForm::initialize()
 
 void NCForm::redraw()
 {
+    int c_x = 0, c_y = 0;
+    
     if (m_ncFields.empty())
         initialize();
     
@@ -171,6 +174,9 @@ void NCForm::redraw()
     int x = m_x, y = m_y + (m_fields.size() * 2) + 2;
     
     auto window = getWindow();
+    
+    c_x = getcurx(window);
+    c_y = getcury(window);
     box(window, 0, 0);
     
     for(auto &field : m_ncFields)
@@ -200,7 +206,10 @@ void NCForm::redraw()
         
         x += button.text.length() + 6;
     }
-
+    if(m_focusedItem < m_fields.size())
+    {
+        wmove(window, c_y, c_x);
+    }
     m_needRedraw = false;
 }
 
@@ -253,7 +262,7 @@ bool NCForm::keyEvent(int key)
             }
             return true;
         
-        case 10:
+        case 10: // Enter
         {
             int buttonIndex = m_focusedItem - m_fields.size();
             if (buttonIndex >= 0)
@@ -262,18 +271,22 @@ bool NCForm::keyEvent(int key)
                 if (fn)
                     fn();
             }
-            
             return true;
         }
 
         case 127:
+            
         case KEY_BACKSPACE:
         {
             if (m_focusedItem < m_fields.size())
             {
-                if (strlen(field_buffer(m_ncFields[m_focusedItem], 0)) > 1)
-                    form_driver(m_form, REQ_DEL_PREV);
+                if(form_driver(m_form, REQ_PREV_CHAR) == 0)
+                {
+                    form_driver(m_form, REQ_DEL_CHAR);
+                    m_needRedraw = true;
+                }
             }
+            
             break;
         }
             

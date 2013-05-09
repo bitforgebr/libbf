@@ -28,6 +28,9 @@
 
 #include <form.h>
 
+class NCForm;
+typedef std::shared_ptr<NCForm> NCFormPtr;
+
 enum NCFormFieldValidation
 {
     fvNone,
@@ -101,5 +104,6 @@ protected:
     void initialize();
     virtual bool keyEvent(int key);
 };
+
 
 #endif // NCFORM_H

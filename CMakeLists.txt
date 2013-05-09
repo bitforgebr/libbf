@@ -30,6 +30,7 @@ add_library(bf
     bf/ncurses/ncmenu.cpp
     bf/ncurses/ncwidget.cpp
     bf/ncurses/ncwindow.cpp
+    bf/net/bfsocket.cpp
 )
 
 ############### Unit tests ####################################################
@@ -53,7 +54,8 @@ if(build_tests)
         COMMAND runUnitTests
     )
     
-    include_directories(${CURSES_INCLUDE_PATH})
+    include_directories(${CURSES_INCLUDE_PATH} ${CURSES_INCLUDE_PATH}/ncurses )
+    
     add_executable(ncurses tests/ncurses.cpp)
     target_link_libraries(ncurses bf ${Boost_LIBRARIES}  pthread ${CURSES_LIBRARIES})
 endif()
@@ -74,6 +76,7 @@ install(FILES
     bf/ncurses/ncmenu.h
     bf/ncurses/ncwidget.h
     bf/ncurses/ncwindow.h
+    bf/net/bfsocket.h
     DESTINATION include/bf)
 
 set(CPACK_GENERATOR "RPM;TGZ;STGZ;TBZ2")

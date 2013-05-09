@@ -81,7 +81,6 @@ void NCMenu::redraw()
         else
             x += m_margin;
     }
-
     m_needRedraw = false;
 }
 
