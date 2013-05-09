@@ -30,6 +30,7 @@ add_library(bf
     bf/ncurses/ncmenu.cpp
     bf/ncurses/ncwidget.cpp
     bf/ncurses/ncwindow.cpp
+    bf/ncurses/ncstatusbar.cpp
     bf/net/bfsocket.cpp
 )
 
@@ -76,6 +77,7 @@ install(FILES
     bf/ncurses/ncmenu.h
     bf/ncurses/ncwidget.h
     bf/ncurses/ncwindow.h
+    bf/ncurses/ncstatusbar.h
     bf/net/bfsocket.h
     DESTINATION include/bf)
 

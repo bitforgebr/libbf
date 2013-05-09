@@ -27,7 +27,9 @@
 
 enum NCStyleType {
     stNormal = 1,
-    stHighlight
+    stHighlight,
+    stWindowBkg,
+    stPanelBkg
 };
 
 enum NCStyleColor {
