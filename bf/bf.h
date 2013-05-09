@@ -271,21 +271,24 @@ bool is_zero(const T& t)
 
 inline std::string stringStrip(std::string str)
 {
-    for(int i = 0, end = str.size(); i != end; i++)
+    if (!str.empty())
     {
-        if(isalnum(str[i]))
+        for(int i = 0, end = str.size(); i < end; i++)
         {
-            str.erase(0, i);
-            break;
+            if(!isspace(str[i]))
+            {
+                str.erase(0, i);
+                break;
+            }
         }
-    }
-    
-    for(int i = str.size() - 1, end = 0; i != end; i--)
-    {
-        if(isalnum(str[i]))
+        
+        for(int i = str.size() - 1, end = 0; i > end; i--)
         {
-            str.erase(i + 1, str.size());
-            break;
+            if(!isspace(str[i]))
+            {
+                str.erase(i + 1, str.size());
+                break;
+            }
         }
     }
     
