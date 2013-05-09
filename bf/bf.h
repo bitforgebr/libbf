@@ -269,6 +269,29 @@ bool is_zero(const T& t)
     return true;
 }
 
+inline std::string stringStrip(std::string str)
+{
+    for(int i = 0, end = str.size(); i != end; i++)
+    {
+        if(!isblank(str[i]))
+        {
+            str.erase(0, i);
+            break;
+        }
+    }
+    
+    for(int i = str.size() - 1, end = 0; i != end; i--)
+    {
+        if(!isblank(str[i]))
+        {
+            str.erase(i + 1, str.size());
+            break;
+        }
+    }
+    
+    return str;
+}
+
 
 constexpr unsigned int strKey(const char* str)
 {
