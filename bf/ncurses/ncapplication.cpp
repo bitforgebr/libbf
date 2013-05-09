@@ -102,19 +102,19 @@ int NCApplication::exec()
         struct timeval timeout = { 1, 0 };
         int ret = select(maxFd, &read, &write, &except, &timeout);
         
-        if (ret >= 0)
+        if (ret > 0)
         {
-            if (ret > 0)
+            if (FD_ISSET(STDIN_FILENO, &read))
             {
                 auto window = *m_windows.rbegin();
                 window->keyEvent(wgetch(window->m_window));
             }
-            
-            for(auto it : m_windows)
-            {
-                if (it->needRedraw())
-                    it->redraw();
-            }
+        }
+
+        for(auto it : m_windows)
+        {
+            if (it->needRedraw())
+                it->redraw();
         }
     }
     

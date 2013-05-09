@@ -99,6 +99,7 @@ void NCForm::initialize()
         
         set_field_back(f, A_UNDERLINE);
         field_opts_off(f, O_AUTOSKIP);   // Don't go to next field when this Field is filled up  
+
         switch(field.validation)
         {
             case fvNone: 
@@ -139,8 +140,6 @@ void NCForm::initialize()
     //keypad(m_formWindow, TRUE);
     m_formWindow = getWindow();
     
-    
-    
     const int formMargin = 1;
     
     // Set main window and sub window 
@@ -153,10 +152,10 @@ void NCForm::initialize()
     
     x = m_x + formMargin, y = m_y + formMargin + 1;
     
-    mvwprintw(m_formWindow, m_y, m_x, "%s", m_title.c_str());
+    mvwprintw(m_formWindow, m_y, m_x, m_title.c_str());
     for(auto &field : m_fields)
     {
-        mvwprintw(m_formWindow, y, x, "%s", field.text.c_str());
+        mvwprintw(m_formWindow, y, x, field.text.c_str());
         y += 2;
     }
     
@@ -220,7 +219,6 @@ bool NCForm::keyEvent(int key)
         case KEY_UP:
             if (m_focusedItem > 0)
             {
-            
                 if (form_driver(m_form, REQ_PREV_FIELD) == 0)
                 {
                     form_driver(m_form, REQ_END_LINE);
