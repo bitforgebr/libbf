@@ -35,7 +35,9 @@ NCApplication::NCApplication()
     {
         start_color();
         setStyle(stNormal, scWhite, scBlack);
-        setStyle(stHighlight, scWhite, scBlue);
+        setStyle(stHighlight, scBlue, scWhite);
+        setStyle(stWindowBkg, scWhite, scBlue);
+        setStyle(stPanelBkg, scWhite, scBlack);
     }
 }
     

@@ -17,10 +17,14 @@ NCStatusBar::~NCStatusBar()
 
 void NCStatusBar::redraw()
 {
+    int c_x = getcurx(stdscr), c_y = getcury(stdscr);
+    
     std::string status = m_statusCalback();
     wclear(m_window);
     mvwprintw(m_window, 0, 0, "%s", status.c_str());
     wbkgd(m_window, COLOR_PAIR(stHighlight));
     wrefresh(m_window);
+    
+    move(c_y, c_x);
     m_needRedraw = true;
 }

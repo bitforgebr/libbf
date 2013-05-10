@@ -20,6 +20,7 @@
 
 #include "ncmenu.h"
 #include "ncwindow.h"
+#include "ncapplication.h"
 
 NCMenu::NCMenu(NCWindowRef parent, NCOrientation orientation):
     NCWidget(parent, parent->x(), parent->y()),
@@ -62,11 +63,14 @@ void NCMenu::addMenuOptions(NCMenuItemVector items)
 
 void NCMenu::redraw()
 {
+    int c_x = getcurx(stdscr), c_y = getcury(stdscr);
+    
     unsigned int index = 0;
     int x = m_x, y = m_y;
     
     auto window = getWindow();
     box(window, 0, 0);
+    wbkgd(window, COLOR_PAIR(stWindowBkg));
     
     for(NCMenuItem& item : m_menuItems)
     {
@@ -81,6 +85,8 @@ void NCMenu::redraw()
         else
             x += m_margin;
     }
+    
+    move(c_y, c_x);
     m_needRedraw = false;
 }
 

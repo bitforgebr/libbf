@@ -181,6 +181,7 @@ void NCForm::redraw()
     c_x = getcurx(window);
     c_y = getcury(window);
     box(window, 0, 0);
+    wbkgd(window, COLOR_PAIR(stWindowBkg));
     
     for(auto &field : m_ncFields)
     {
@@ -191,8 +192,8 @@ void NCForm::redraw()
         }
         else
         {
-            set_field_fore(field, COLOR_PAIR(stNormal));
-            set_field_back(field, COLOR_PAIR(stNormal));
+            set_field_fore(field, COLOR_PAIR(stWindowBkg));
+            set_field_back(field, COLOR_PAIR(stWindowBkg));
         }
         index++;
     }
