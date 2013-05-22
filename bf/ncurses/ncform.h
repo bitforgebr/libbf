@@ -40,10 +40,18 @@ enum NCFormFieldValidation
     fvRegExp
 };
 
+enum NCFormFieldType
+{
+    ftNormalInput,
+    ftCheckbox
+};
+
 struct NCFormField
 {
     NCFormField() {};
     ~NCFormField() {};
+
+    NCFormFieldType type = ftNormalInput;
 
     std::string text;
     std::string value;
