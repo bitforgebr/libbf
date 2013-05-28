@@ -127,6 +127,7 @@ public:
         ptHTTPS
     };
     
+    ServiceAddress() {}
     ServiceAddress(std::string _url, SocketType _type = stUNKNOWN);
 
 private:
