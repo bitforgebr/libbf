@@ -107,7 +107,6 @@ void NCForm::initialize()
                 if(!field.value.empty())
                     set_field_buffer(f, 0, field.value.c_str());
 
-
                 switch(field.validation)
                 {
                     case fvNone:
@@ -222,6 +221,12 @@ void NCForm::redraw()
     
     index--;
     
+    int width = 0;
+    for(auto &button : m_buttons)
+        width += button.text.length() + 4;
+
+    x = (window->_maxx / 2) - (width / 2);
+
     for(auto &button : m_buttons)
     {
         if (index == m_focusedItem) wattron(window, A_REVERSE);
