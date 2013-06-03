@@ -29,26 +29,38 @@ inline char* uinttostr(char* buffer, const int bufferSize, unsigned int val)
 {
     char* c = buffer + (bufferSize - 1);
     *c = 0;
-    
+
     do
     {
         *--c = '0' + (val % 10);
         val /= 10;
     }
     while(val);
-    
+
     return c;
+}
+
+inline std::string uinttostr(unsigned int val)
+{
+    char buffer[32];
+    return uinttostr(buffer, sizeof(buffer), val);
 }
 
 inline char* inttostr(char* buffer, const int bufferSize, int val)
 {
     const bool neg = val < 0;
     char* result =  const_cast<char*>(uinttostr(buffer, bufferSize, abs(val)));
-    
+
     if(neg)
         *--result = '-';
-    
+
     return result;
+}
+
+inline std::string inttostr(unsigned int val)
+{
+    char buffer[32];
+    return inttostr(buffer, sizeof(buffer), val);
 }
 
 inline char* uinttostr(char* buffer, const int bufferSize, unsigned int val, int base)
@@ -72,15 +84,33 @@ inline char* uinttostr(char* buffer, const int bufferSize, unsigned int val, int
     return c;
 }
 
+inline std::string uinttostr(unsigned int val, int base)
+{
+    char buffer[32];
+    return uinttostr(buffer, sizeof(buffer), val, base);
+}
+
 
 inline char* uinttohex(char* buffer, const int bufferSize, unsigned int val)
 {
     return uinttostr(buffer, bufferSize, val, 16);
 }
 
+inline std::string uinttohex(unsigned int val)
+{
+    char buffer[32];
+    return uinttohex(buffer, sizeof(buffer), val);
+}
+
 inline char* inttohex(char* buffer, const int bufferSize, int val)
 {
     return uinttostr(buffer, bufferSize, abs(val), 16);
+}
+
+inline std::string inttohex(unsigned int val)
+{
+    char buffer[32];
+    return inttohex(buffer, sizeof(buffer), val);
 }
 
 inline char* uint64tostr(char* buffer, const int bufferSize, uint64_t val)
@@ -98,6 +128,12 @@ inline char* uint64tostr(char* buffer, const int bufferSize, uint64_t val)
     return c;
 }
 
+inline std::string uint64tostr(uint64_t val)
+{
+    char buffer[64];
+    return uint64tostr(buffer, sizeof(buffer), val);
+}
+
 inline char* int64tostr(char* buffer, const int bufferSize, int64_t val)
 {
     const bool neg = val < 0;
@@ -107,6 +143,12 @@ inline char* int64tostr(char* buffer, const int bufferSize, int64_t val)
         *--result = '-';
     
     return result;
+}
+
+inline std::string int64tostr(uint64_t val)
+{
+    char buffer[64];
+    return int64tostr(buffer, sizeof(buffer), val);
 }
 
 inline int hextoint(const char* v)
@@ -130,6 +172,11 @@ inline int hextoint(const char* v)
     return res;
 }
 
+inline int hextoint(const std::string& v)
+{
+    return hextoint(v.c_str());
+}
+
 inline int64_t hextoint64(const char* v)
 {
     int64_t res = 0;
@@ -149,6 +196,11 @@ inline int64_t hextoint64(const char* v)
     }
     
     return res;
+}
+
+inline int64_t hextoint64(const std::string& v)
+{
+    return hextoint64(v.c_str());
 }
 
 }
