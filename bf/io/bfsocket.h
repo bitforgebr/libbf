@@ -1,7 +1,8 @@
 #ifndef BFSOCKET_H
 #define BFSOCKET_H
 
-#include <bf/bf.h>
+#include "../bf.h"
+#include "bfio.h"
 
 #include <arpa/inet.h>
 
@@ -28,16 +29,11 @@ namespace bitforge {
 #define THROW_SOCKET_ADDR_EXCEPTION(STR) do { ::std::stringstream ss; ss << STR; throw SocketAddrerssException(ss.str()); } while (false)
 #endif
 
-typedef ::std::size_t   size_t;
-typedef ssize_t         ssize_t;
-
-typedef SingletonStrongTypedef<int> FileDescriptor;
-
-class SocketException: public ErrnoException
+class SocketException: public IOException
 {
 public:
-    SocketException(int error_no): ErrnoException(error_no) {};
-    SocketException(std::string err_msg, int error_no): ErrnoException(err_msg, error_no) {};
+    SocketException(int error_no): IOException(error_no) {};
+    SocketException(std::string err_msg, int error_no): IOException(err_msg, error_no) {};
 };
 
 class SocketAddrerssException: public SocketException
@@ -152,49 +148,7 @@ public:
     const SockAddrIn* sockAddr()   { return &m_sockAddr; }
 };
 
-template<typename T> 
-class IntrusiveListItem
-{
-public:
-    typedef std::shared_ptr<T> shared_ptr_type;
-    
-    shared_ptr_type next() {
-        return m_next;
-    }
-    
-    shared_ptr_type prev() {
-        return m_prev;
-    }
-    
-protected:
-    shared_ptr_type m_next;
-    shared_ptr_type m_prev;
-    
-    void insertNext(shared_ptr_type _sharedThis, shared_ptr_type _next) 
-    {
-        _next->m_prev = _sharedThis;
-        _next->m_next = m_next;
-        m_next = _next;
-    }
-    
-    void insertPrev(shared_ptr_type _sharedThis, shared_ptr_type _prev) 
-    {
-        _prev->m_prev = m_prev;
-        _prev->m_next = _sharedThis;
-        m_prev = _prev;
-    }
-};
-
-class BFIO: public IntrusiveListItem<BFIO>, public std::enable_shared_from_this<BFIO>
-{
-public:
-    virtual ssize_t read(void *, size_t) = 0;
-    virtual ssize_t write(void *, size_t) = 0;
-    virtual ssize_t canRead() = 0;
-    virtual ssize_t canWrite() = 0;
-};
-
-class BFSocket: public BFIO
+class BFSocket: public BFSimpleFd
 {
 public:
     explicit BFSocket(ServiceAddress _addr, std::string _bindDevice = std::string());
@@ -202,7 +156,7 @@ public:
 
 private:
     explicit BFSocket(ServiceAddress _addr, FileDescriptor&& _fd);
-    FileDescriptor  m_fd;
+
     ServiceAddress  m_addr;
     int             m_sendBufferSize;
     bool            m_isNonblocking;
@@ -219,7 +173,7 @@ public:
     
     virtual ssize_t canRead();
     virtual ssize_t canWrite();
-    
+
     virtual std::shared_ptr<BFSocket> acceptClient();
     
     virtual ServiceAddress serviceAddress() { return m_addr; };

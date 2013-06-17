@@ -21,7 +21,7 @@ endif()
 
 include_directories(. ${CURSES_INCLUDE_PATH} ${CURSES_INCLUDE_PATH}/ncurses )
 
-add_library(bf 
+add_library(bf
     bf/bf.cpp 
     bf/log.cpp
 
@@ -32,7 +32,9 @@ add_library(bf
     bf/ncurses/ncwidget.cpp
     bf/ncurses/ncwindow.cpp
     bf/ncurses/ncstatusbar.cpp
-    bf/net/bfsocket.cpp
+    bf/io/bfio.cpp
+    bf/io/bfsocket.cpp
+    bf/io/bfserial.cpp
 )
 
 ############### Unit tests ####################################################
@@ -77,7 +79,9 @@ install(FILES
     bf/ncurses/ncwidget.h
     bf/ncurses/ncwindow.h
     bf/ncurses/ncstatusbar.h
-    bf/net/bfsocket.h
+    bf/io/bfio.h
+    bf/io/bfsocket.h
+    bf/io/bfserial.h
     DESTINATION include/bf)
 
 set(CPACK_GENERATOR "RPM;TGZ;STGZ;TBZ2")
