@@ -47,6 +47,11 @@ public:
         str = readLine();
         return *this;
     }
+
+    enum SerialSigs
+    {
+        SIGSUSP = 032,
+    };
 };
 
 }

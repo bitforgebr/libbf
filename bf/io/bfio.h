@@ -73,6 +73,12 @@ public:
     virtual ssize_t canRead() = 0;
     virtual ssize_t canWrite() = 0;
 
+    BFIO& operator<<(char c)
+    {
+        write(&c, sizeof(char));
+        return *this;
+    }
+
     BFIO& operator<<(std::string str)
     {
         write(str.data(), str.length());
