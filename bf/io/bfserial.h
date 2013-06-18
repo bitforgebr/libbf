@@ -54,6 +54,12 @@ public:
     };
 };
 
+inline std::ostream& operator<<(std::ostream &stream, BFSerial &serial)
+{
+    stream << serial.readLine();
+    return stream;
+}
+
 }
 
 #endif // BFSERIAL_H
