@@ -151,9 +151,9 @@ inline std::string int64tostr(uint64_t val)
     return int64tostr(buffer, sizeof(buffer), val);
 }
 
-inline int hextoint(const char* v)
+inline uint hextoint(const char* v)
 {
-    int res = 0;
+    uint res = 0;
     
     while(*v)
     {
@@ -172,14 +172,14 @@ inline int hextoint(const char* v)
     return res;
 }
 
-inline int hextoint(const std::string& v)
+inline uint hextoint(const std::string& v)
 {
     return hextoint(v.c_str());
 }
 
-inline int64_t hextoint64(const char* v)
+inline uint64_t hextoint64(const char* v)
 {
-    int64_t res = 0;
+    uint64_t res = 0;
     
     while(*v)
     {
@@ -198,7 +198,7 @@ inline int64_t hextoint64(const char* v)
     return res;
 }
 
-inline int64_t hextoint64(const std::string& v)
+inline uint64_t hextoint64(const std::string& v)
 {
     return hextoint64(v.c_str());
 }
