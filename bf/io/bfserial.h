@@ -21,7 +21,7 @@
 #ifndef BFSERIAL_H
 #define BFSERIAL_H
 
-#include <bf/bfio.h>
+#include "bfio.h"
 
 #include <termios.h>
 
