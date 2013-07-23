@@ -20,6 +20,16 @@ if (CURSES_LIBRARIES)
         bf/ncurses/ncstatusbar.cpp
     )
 
+    set(curses_install_headers
+        bf/ncurses/ncapplication.h
+        bf/ncurses/ncform.h
+        bf/ncurses/ncmenu.h
+        bf/ncurses/ncmenu.h
+        bf/ncurses/ncwidget.h
+        bf/ncurses/ncwindow.h
+        bf/ncurses/ncstatusbar.h
+    )
+
     include_directories(${CURSES_INCLUDE_PATH} ${CURSES_INCLUDE_PATH}/ncurses)
 else()
     message(STATUS "NCurses not found.")
@@ -68,8 +78,10 @@ if(build_tests)
         COMMAND runUnitTests
     )
     
-    add_executable(ncurses tests/ncurses.cpp)
-    target_link_libraries(ncurses bf ${Boost_LIBRARIES}  pthread ${CURSES_LIBRARIES})
+    if (CURSES_LIBRARIES)
+        add_executable(ncurses tests/ncurses.cpp)
+        target_link_libraries(ncurses bf ${Boost_LIBRARIES}  pthread ${CURSES_LIBRARIES})
+    endif()
 endif()
 
 ############### Intallation and Packaging #####################################
@@ -82,13 +94,9 @@ install(FILES
     bf/buffers.h 
     bf/inthex.h 
     bf/service.h 
-    bf/ncurses/ncapplication.h
-    bf/ncurses/ncform.h
-    bf/ncurses/ncmenu.h
-    bf/ncurses/ncmenu.h
-    bf/ncurses/ncwidget.h
-    bf/ncurses/ncwindow.h
-    bf/ncurses/ncstatusbar.h
+
+    ${curses_install_headers}
+
     bf/io/bfio.h
     bf/io/bfsocket.h
     bf/io/bfserial.h
