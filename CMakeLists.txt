@@ -32,6 +32,7 @@ if (CURSES_LIBRARIES)
 
     include_directories(${CURSES_INCLUDE_PATH} ${CURSES_INCLUDE_PATH}/ncurses)
 else()
+    set(CURSES_LIBRARIES )
     message(STATUS "NCurses not found.")
 endif()
 
