@@ -181,7 +181,7 @@ inline std::string getDate(DateFormat dateFormat = dfSQL)
     return dateStr;
 }
 
-timespec timespecDiff(timespec start, timespec end)
+inline timespec timespecDiff(timespec start, timespec end)
 {
     timespec temp;
     if ((end.tv_nsec - start.tv_nsec) < 0) 
