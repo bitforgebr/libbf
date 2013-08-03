@@ -47,6 +47,10 @@ void fn1(NCApplication *app)
     
     f.text = "Gateway:";
     fields.push_back(f);
+
+    f.text = "DHCP:";
+    f.type = ftCheckbox;
+    fields.push_back(f);
     
     form->addFields(std::move(fields));
     

@@ -95,38 +95,59 @@ void NCForm::initialize()
     
     for(auto &field : m_fields)
     {
-        FIELD *f = new_field(1, field.width, y, x, 0, 0);
-        
-        set_field_back(f, A_UNDERLINE);
-        field_opts_off(f, O_AUTOSKIP);   // Don't go to next field when this Field is filled up  
-
-        if(!field.value.empty())
-            set_field_buffer(f, 0, field.value.c_str());
-
-
-        switch(field.validation)
+        switch(field.type)
         {
-            case fvNone: 
-                break;
-                
-            case fvAlpha:
-                set_field_type(f, TYPE_ALPHA, std::max(field.width, field.max_length));
-                break;
-                
-            case fvAlphaNumeric:
-                set_field_type(f, TYPE_ALNUM, std::max(field.width, field.max_length));
-                break;
-                
-            case fvNumeric:
-                set_field_type(f, TYPE_INTEGER, field.intPadding, field.minIntValue, field.maxIntValue);
-                break;
-                
-            case fvRegExp:
-                set_field_type(f, TYPE_REGEXP, field.regexp.c_str());
-                break;
-        }
+            case ftNormalInput:
+            {
+                FIELD *f = new_field(1, field.width, y, x, 0, 0);
 
-        m_ncFields.push_back(f);
+                set_field_back(f, A_UNDERLINE);
+                field_opts_off(f, O_AUTOSKIP);   // Don't go to next field when this Field is filled up
+
+                if(!field.value.empty())
+                    set_field_buffer(f, 0, field.value.c_str());
+
+                switch(field.validation)
+                {
+                    case fvNone:
+                        break;
+
+                    case fvAlpha:
+                        set_field_type(f, TYPE_ALPHA, std::max(field.width, field.max_length));
+                        break;
+
+                    case fvAlphaNumeric:
+                        set_field_type(f, TYPE_ALNUM, std::max(field.width, field.max_length));
+                        break;
+
+                    case fvNumeric:
+                        set_field_type(f, TYPE_INTEGER, field.intPadding, field.minIntValue, field.maxIntValue);
+                        break;
+
+                    case fvRegExp:
+                        set_field_type(f, TYPE_REGEXP, field.regexp.c_str());
+                        break;
+                }
+
+                m_ncFields.push_back(f);
+                break;
+            }
+
+            case ftCheckbox:
+            {
+                FIELD *f = new_field(1, 4, y, x, 0, 0);
+
+                field_opts_off(f, O_AUTOSKIP);   // Don't go to next field when this Field is filled up
+
+                if (field.value.size())
+                    set_field_buffer(f, 0, "[X]");
+                else
+                    set_field_buffer(f, 0, "[ ]");
+
+                m_ncFields.push_back(f);
+                break;
+            }
+        }
         
         y += 2;
     }
@@ -200,6 +221,12 @@ void NCForm::redraw()
     
     index--;
     
+    int width = 0;
+    for(auto &button : m_buttons)
+        width += button.text.length() + 4;
+
+    x = (window->_maxx / 2) - (width / 2);
+
     for(auto &button : m_buttons)
     {
         if (index == m_focusedItem) wattron(window, A_REVERSE);
@@ -296,9 +323,29 @@ bool NCForm::keyEvent(int key)
         default:
             if (m_focusedItem < m_fields.size())
             {
-                /* If this is a normal character, it gets */
-                /* Printed                */    
-                form_driver(m_form, key);
+                auto &field = m_fields[m_focusedItem];
+                if (field.type == ftNormalInput)
+                {
+                    /* If this is a normal character, it gets */
+                    /* Printed                */
+                    form_driver(m_form, key);
+                }
+                else
+                {
+                    auto f = m_ncFields[m_focusedItem];
+
+                    if (field.value.size())
+                    {
+                        field.value.clear();
+                        set_field_buffer(f, 0, "[ ]");
+                    }
+                    else
+                    {
+                        field.value = "T";
+                        set_field_buffer(f, 0, "[X]");
+                    }
+                }
+
                 m_needRedraw = true;
             }
             return true;

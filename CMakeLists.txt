@@ -9,6 +9,33 @@ add_definitions(-Wall -Wextra -ftrack-macro-expansion=2 -fPIC)
 set(CURSES_NEED_NCURSES True)
 find_package(Curses)
 
+if (CURSES_LIBRARIES)
+    set(curses_files
+        bf/ncurses/ncapplication.cpp
+        bf/ncurses/ncform.cpp
+        bf/ncurses/ncmenu.cpp
+        bf/ncurses/ncmenu.cpp
+        bf/ncurses/ncwidget.cpp
+        bf/ncurses/ncwindow.cpp
+        bf/ncurses/ncstatusbar.cpp
+    )
+
+    set(curses_install_headers
+        bf/ncurses/ncapplication.h
+        bf/ncurses/ncform.h
+        bf/ncurses/ncmenu.h
+        bf/ncurses/ncmenu.h
+        bf/ncurses/ncwidget.h
+        bf/ncurses/ncwindow.h
+        bf/ncurses/ncstatusbar.h
+    )
+
+    include_directories(${CURSES_INCLUDE_PATH} ${CURSES_INCLUDE_PATH}/ncurses)
+else()
+    set(CURSES_LIBRARIES )
+    message(STATUS "NCurses not found.")
+endif()
+
 find_package(CheckForCPP11 HINTS $ENV{MISC_CMAKE_MODULES})
 
 if ( CPP11 )
@@ -19,20 +46,16 @@ else()
 endif()
 
 
-include_directories(. ${CURSES_INCLUDE_PATH} ${CURSES_INCLUDE_PATH}/ncurses )
+include_directories(.)
 
-add_library(bf 
+add_library(bf
     bf/bf.cpp 
     bf/log.cpp
+    ${CURSES_LIBRARIES}
 
-    bf/ncurses/ncapplication.cpp
-    bf/ncurses/ncform.cpp
-    bf/ncurses/ncmenu.cpp
-    bf/ncurses/ncmenu.cpp
-    bf/ncurses/ncwidget.cpp
-    bf/ncurses/ncwindow.cpp
-    bf/ncurses/ncstatusbar.cpp
-    bf/net/bfsocket.cpp
+    bf/io/bfio.cpp
+    bf/io/bfsocket.cpp
+    bf/io/bfserial.cpp
 )
 
 ############### Unit tests ####################################################
@@ -56,8 +79,10 @@ if(build_tests)
         COMMAND runUnitTests
     )
     
-    add_executable(ncurses tests/ncurses.cpp)
-    target_link_libraries(ncurses bf ${Boost_LIBRARIES}  pthread ${CURSES_LIBRARIES})
+    if (CURSES_LIBRARIES)
+        add_executable(ncurses tests/ncurses.cpp)
+        target_link_libraries(ncurses bf ${Boost_LIBRARIES}  pthread ${CURSES_LIBRARIES})
+    endif()
 endif()
 
 ############### Intallation and Packaging #####################################
@@ -70,14 +95,12 @@ install(FILES
     bf/buffers.h 
     bf/inthex.h 
     bf/service.h 
-    bf/ncurses/ncapplication.h
-    bf/ncurses/ncform.h
-    bf/ncurses/ncmenu.h
-    bf/ncurses/ncmenu.h
-    bf/ncurses/ncwidget.h
-    bf/ncurses/ncwindow.h
-    bf/ncurses/ncstatusbar.h
-    bf/net/bfsocket.h
+
+    ${curses_install_headers}
+
+    bf/io/bfio.h
+    bf/io/bfsocket.h
+    bf/io/bfserial.h
     DESTINATION include/bf)
 
 set(CPACK_GENERATOR "RPM;TGZ;STGZ;TBZ2")

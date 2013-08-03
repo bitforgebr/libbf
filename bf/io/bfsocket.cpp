@@ -214,7 +214,7 @@ ServiceAddress::ServiceAddress(std::string _url, ServiceAddress::SocketType _typ
 };
 
 BFSocket::BFSocket(ServiceAddress _addr, FileDescriptor&& _fd):
-    m_fd(_fd),
+    BFSimpleFd(_fd),
     m_addr(_addr)
 {
 }
@@ -314,15 +314,6 @@ BFSocket::BFSocket(ServiceAddress _addr, std::string _bindDevice):
     if(getsockopt(m_fd.get(), SOL_SOCKET, SO_SNDBUF, &m_sendBufferSize, &len) == -1)
         THROW_SOCKET_EXCEPTION("Could not get send buffer size - " << strerror(errno));
 };
-
-BFSocket::~BFSocket()
-{
-    if(m_fd.get())
-    {
-        close(m_fd.get());
-        m_fd = FileDescriptor(); // Reset to make sure it is == 0
-    }
-}
 
 ssize_t BFSocket::read(void* _buffer, size_t _size)
 {

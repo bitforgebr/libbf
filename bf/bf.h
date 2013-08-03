@@ -294,10 +294,14 @@ inline std::string stringStrip(std::string str)
             if(!isspace(str[i]))
             {
                 str.erase(0, i);
-                break;
+                goto FOUND_PRINTABLE;
             }
         }
+
+        str.clear();
+        return str;
         
+FOUND_PRINTABLE:
         for(int i = str.size() - 1, end = 0; i > end; i--)
         {
             if(!isspace(str[i]))
