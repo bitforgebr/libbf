@@ -211,10 +211,10 @@ ServiceAddress::ServiceAddress(std::string _url, ServiceAddress::SocketType _typ
     }
     else
         m_socketType = _type;
-};
+}
 
 BFSocket::BFSocket(ServiceAddress _addr, FileDescriptor&& _fd):
-    BFSimpleFd(_fd),
+    m_fd(_fd),
     m_addr(_addr)
 {
 }
@@ -313,7 +313,16 @@ BFSocket::BFSocket(ServiceAddress _addr, std::string _bindDevice):
     socklen_t len = sizeof(m_sendBufferSize);
     if(getsockopt(m_fd.get(), SOL_SOCKET, SO_SNDBUF, &m_sendBufferSize, &len) == -1)
         THROW_SOCKET_EXCEPTION("Could not get send buffer size - " << strerror(errno));
-};
+}
+
+BFSocket::~BFSocket()
+{
+    if(m_fd.get())
+    {
+        close(m_fd.get());
+        m_fd = FileDescriptor(); // Reset to make sure it is == 0
+    }
+}
 
 ssize_t BFSocket::read(void* _buffer, size_t _size)
 {
@@ -329,7 +338,7 @@ ssize_t BFSocket::read(void* _buffer, size_t _size)
         }
     }
     return res;
-};
+}
 
 ssize_t BFSocket::write(void* _buffer, size_t _size)
 {
@@ -342,7 +351,7 @@ ssize_t BFSocket::write(void* _buffer, size_t _size)
     if(res == -1)
         THROW_SOCKET_EXCEPTION("Could not write data to Socket - " << strerror(errno));
     return res;
-};
+}
 
 ssize_t BFSocket::spliceWrite(int pipeFd, size_t _size)
 {
@@ -366,6 +375,7 @@ ssize_t BFSocket::spliceWrite(int pipeFd, size_t _size)
             {
                 res = splice(pipeFd, nullptr, m_fd.get(), nullptr, _size, SPLICE_F_MORE);
             }
+            break;
         }
         default:
             THROW_SOCKET_EXCEPTION("Unhandled socket type: " << m_addr.socketType());
@@ -375,7 +385,7 @@ ssize_t BFSocket::spliceWrite(int pipeFd, size_t _size)
     if(res == -1)
         THROW_SOCKET_EXCEPTION("Could not splice to Socket - " << strerror(errno));
     return res;
-};
+}
 
 ssize_t BFSocket::canRead()
 {
@@ -383,7 +393,7 @@ ssize_t BFSocket::canRead()
     if(ioctl(m_fd.get(), FIONREAD, &result) == -1)
         THROW_SOCKET_EXCEPTION("Could not realize can read - " << strerror(errno));
     return result;
-};
+}
 
 ssize_t BFSocket::canWrite()
 {
@@ -398,7 +408,7 @@ ssize_t BFSocket::canWrite()
         THROW_SOCKET_EXCEPTION("Could not realize can read - " << strerror(errno));
     return m_sendBufferSize - result;
 #endif
-};
+}
 
 BFSocketPtr BFSocket::acceptClient()
 {

@@ -49,14 +49,17 @@ endif()
 include_directories(.)
 
 add_library(bf
-    bf/bf.cpp 
+    bf/bf.cpp
     bf/log.cpp
     ${CURSES_LIBRARIES}
+    ${curses_files}
 
     bf/io/bfio.cpp
-    bf/io/bfsocket.cpp
     bf/io/bfserial.cpp
+    bf/io/net/bfsocket.cpp
 )
+
+add_subdirectory(bf/io/net/test)
 
 ############### Unit tests ####################################################
 
@@ -67,18 +70,18 @@ if(build_tests)
     find_library(LIBGTEST NAMES gtest)
     find_library(LIBGTEST_MAIN NAMES gtest_main)
     find_package(Boost COMPONENTS date_time REQUIRED)
-    
+
     enable_testing()
-    
+
 
     add_executable(runUnitTests tests/int_hex_tests.cpp tests/circularbuffer_test.cpp tests/utils_tests.cpp tests/log_test.cpp)
     target_link_libraries(runUnitTests bf ${Boost_LIBRARIES} ${LIBGTEST_MAIN} ${LIBGTEST} pthread)
-    
+
     add_test(
         NAME runUnitTests
         COMMAND runUnitTests
     )
-    
+
     if (CURSES_LIBRARIES)
         add_executable(ncurses tests/ncurses.cpp)
         target_link_libraries(ncurses bf ${Boost_LIBRARIES}  pthread ${CURSES_LIBRARIES})
@@ -88,19 +91,21 @@ endif()
 ############### Intallation and Packaging #####################################
 
 install(TARGETS bf DESTINATION lib)
-install(FILES 
-    bf/bf.h 
-    bf/ncstring.h 
-    bf/log.h 
-    bf/buffers.h 
-    bf/inthex.h 
-    bf/service.h 
+install(FILES
+    bf/bf.h
+    bf/ncstring.h
+    bf/log.h
+    bf/buffers.h
+    bf/inthex.h
+    bf/service.h
 
     ${curses_install_headers}
 
     bf/io/bfio.h
-    bf/io/bfsocket.h
     bf/io/bfserial.h
+    
+    bf/io/net/bfsocket.h
+    
     DESTINATION include/bf)
 
 set(CPACK_GENERATOR "RPM;TGZ;STGZ;TBZ2")

@@ -79,4 +79,13 @@ ssize_t BFSimpleFd::canWrite()
     return 0;
 };
 
+void BFSimpleFd::setNonblocking()
+{
+}
+
+const FileDescriptor BFSimpleFd::fileDescriptor() const
+{
+    return FileDescriptor();
+}
+
 };

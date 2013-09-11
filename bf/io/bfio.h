@@ -72,6 +72,8 @@ public:
     virtual ssize_t write(const void *, size_t) = 0;
     virtual ssize_t canRead() = 0;
     virtual ssize_t canWrite() = 0;
+    virtual void setNonblocking() = 0;
+    virtual const FileDescriptor fileDescriptor() const = 0;
 
     BFIO& operator<<(char c)
     {
@@ -102,6 +104,9 @@ public:
 
     virtual ssize_t canRead();
     virtual ssize_t canWrite();
+    
+    virtual void setNonblocking();
+    virtual const FileDescriptor fileDescriptor() const;
 };
 
 }
