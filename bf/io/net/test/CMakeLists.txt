@@ -5,7 +5,7 @@ find_library(LIBGTEST_MAIN NAMES gtest_main)
 find_package(LibBF HINTS $ENV{MISC_CMAKE_MODULES} REQUIRED)
 
 find_library(LIBEV NAMES ev)
-find_path(LIBEV_INCLUDE_DIR "ev++.h" HINTS /usr/libev /usr/local/libev /usr/local/include /usr/include)
+find_path(LIBEV_INCLUDE_DIR "ev++.h" HINTS /usr/libev /usr/local/libev /usr/local/include /usr/include /usr/include/libev)
 
 include_directories(${LIBEV_INCLUDE_DIR} ../)
 
