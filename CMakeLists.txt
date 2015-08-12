@@ -59,8 +59,6 @@ add_library(bf
     bf/io/net/bfsocket.cpp
 )
 
-add_subdirectory(bf/io/net/test)
-
 ############### Unit tests ####################################################
 
 set(build_tests false CACHE BOOL "Set to TRUE to build unit tests")
@@ -86,6 +84,9 @@ if(build_tests)
         add_executable(ncurses tests/ncurses.cpp)
         target_link_libraries(ncurses bf ${Boost_LIBRARIES}  pthread ${CURSES_LIBRARIES})
     endif()
+
+    add_subdirectory(bf/io/net/test)
+
 endif()
 
 ############### Intallation and Packaging #####################################
