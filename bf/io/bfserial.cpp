@@ -172,7 +172,7 @@ std::string BFSerial::readLine()
         if (sz <= 0)
             return result;
 
-        for(size_t i = 0; i != sz; i++)
+        for(int i = 0; i != sz; i++)
         {
             if (buffer[i] == '\n')
             {
