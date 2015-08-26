@@ -231,7 +231,7 @@ BFSocket::BFSocket(ServiceAddress _addr, std::string _bindDevice):
 
     if (signal(SIGPIPE, SIG_IGN) == SIG_ERR)
         THROW_SOCKET_EXCEPTION("Unable to set sigpipe handler - "  << strerror(errno));
-    
+
     switch(m_addr.socketType())
     {
         case ServiceAddress::stUDP:
@@ -241,19 +241,19 @@ BFSocket::BFSocket(ServiceAddress _addr, std::string _bindDevice):
             m_fd.set(socket(AF_INET, SOCK_DGRAM, 0));
             if (m_fd.get() == -1)
                 THROW_SOCKET_EXCEPTION("Unable to create socket - "  << strerror(errno));
-            
+
             if(!_bindDevice.empty())
             {
                 m_device = _bindDevice;
                 if(setsockopt(m_fd.get(), SOL_SOCKET, SO_BINDTODEVICE, _bindDevice.c_str(), _bindDevice.size()) == -1)
                     THROW_SOCKET_EXCEPTION("Unable to bind socket to device - "  << strerror(errno));
-                
+
             }
-            
+
             int i = 1;
             if(setsockopt(m_fd.get(), SOL_SOCKET, SO_REUSEADDR, &i, sizeof(i)))
                 THROW_SOCKET_EXCEPTION("Unable to set socket reuse addr - "  << strerror(errno));
-            
+
             if(m_addr.socketType() != ServiceAddress::stUDPWO)
             {
                 if(bind(m_fd.get(), (struct sockaddr *) &addr, sizeof(addr)) == 1)
@@ -280,7 +280,7 @@ BFSocket::BFSocket(ServiceAddress _addr, std::string _bindDevice):
             m_fd.set(socket(AF_INET, SOCK_STREAM, IPPROTO_TCP));
             if (m_fd.get() == -1)
                 THROW_SOCKET_EXCEPTION("Unable to create socket - "  << strerror(errno));
-            
+
             if(!_bindDevice.empty())
             {
                 m_device = _bindDevice;
@@ -297,7 +297,7 @@ BFSocket::BFSocket(ServiceAddress _addr, std::string _bindDevice):
             {
                 if(bind(m_fd.get(), (struct sockaddr *) &addr, sizeof(addr)) == -1)
                     THROW_SOCKET_EXCEPTION("Could not connect TCP Socket - " << strerror(errno));
-        
+
                 if(listen(m_fd.get(), 2) == -1) // TODO: Number of connection queue should be given
                     THROW_SOCKET_EXCEPTION("Could not listen TCP Socket - " << strerror(errno));
             }
@@ -381,7 +381,7 @@ ssize_t BFSocket::spliceWrite(int pipeFd, size_t _size)
             THROW_SOCKET_EXCEPTION("Unhandled socket type: " << m_addr.socketType());
             break;
     }
-    
+
     if(res == -1)
         THROW_SOCKET_EXCEPTION("Could not splice to Socket - " << strerror(errno));
     return res;
@@ -416,7 +416,7 @@ BFSocketPtr BFSocket::acceptClient()
     fd.set(accept(m_fd.get(), nullptr, 0));
     if(fd.get() == -1)
         THROW_SOCKET_EXCEPTION("Could not accept tcp client - " << strerror(errno));
-    
+
     ServiceAddress sdr(serviceAddress().url(), ServiceAddress::stTCP);
     return BFSocketPtr(new BFSocket(sdr, std::move(fd)));
 }
